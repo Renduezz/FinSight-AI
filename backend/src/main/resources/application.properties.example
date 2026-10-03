@@ -1,0 +1,103 @@
+# Configuration template. Copy it to application.properties and fill in the real values:
+#   cp src/main/resources/application.properties.example src/main/resources/application.properties
+# application.properties is in .gitignore: never commit credentials to the repository.
+
+# APPLICATION
+
+spring.application.name=finsight-api
+
+# POSTGRESQL
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/finsight_db?currentSchema=public
+spring.datasource.username=CHANGE_ME_USER
+spring.datasource.password=CHANGE_ME_PASSWORD
+
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# The user needs create permissions on the public schema (PostgreSQL 15+):
+#   GRANT USAGE, CREATE ON SCHEMA public TO <user>;
+#
+# ddl-auto=update does NOT add unique constraints to existing columns, so the
+# unique index on companies.tax_id is created by hand, once. It is PARTIAL, so a
+# soft-deleted company (active = false) releases its taxId for reuse:
+#   CREATE UNIQUE INDEX IF NOT EXISTS uk_companies_tax_id
+#       ON companies (tax_id) WHERE active;
+# (several NULLs coexist without clashing: taxId is optional)
+#
+# Companies use soft delete. On an existing database add the flag by hand, because
+# ddl-auto=update cannot add a NOT NULL column to a table that already has rows:
+#   ALTER TABLE companies ADD COLUMN IF NOT EXISTS active boolean NOT NULL DEFAULT true;
+#
+# Hibernate also creates CHECK constraints for enum columns (transactions.type,
+# alerts.severity). ddl-auto=update does not rewrite them, so if you rename enum
+# values you must replace the constraint by hand, for example:
+#   ALTER TABLE transactions DROP CONSTRAINT transactions_type_check;
+#   ALTER TABLE transactions ADD CONSTRAINT transactions_type_check
+#       CHECK (type IN ('INCOME','EXPENSE'));
+
+# JPA
+
+#spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=update
+
+spring.jpa.show-sql=true
+
+spring.jpa.properties.hibernate.format_sql=true
+
+# SERVER
+
+server.port=8080
+
+# CSV upload (Spring's default is 1MB per file)
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=10MB
+
+# Never expose stack traces or internal details in error responses
+server.error.include-stacktrace=never
+server.error.include-message=never
+server.error.include-exception=false
+
+# Secret key (minimum 256 bits/32 characters for HMAC-SHA), Base64 encoded.
+# Generate your own, for example:  openssl rand -base64 48
+jwt.secret=CHANGE_ME_BASE64_SECRET
+# Expiration in milliseconds (24 hours)
+jwt.expiration=86400000
+
+
+# CORS (Next.js frontend)
+
+# Exact origins (scheme + host + port) allowed to call the API from a browser,
+# comma separated. Not paths, and never "*" if credentials are ever enabled.
+# Add the deployed frontend here, for example:
+#   cors.allowed-origins=http://localhost:3000,https://finsight.vercel.app
+# Only browser (client component) calls need this: fetches made from Next.js on
+# the server (Server Components, route handlers, server actions) are not subject
+# to CORS at all.
+cors.allowed-origins=http://localhost:3000
+# How long the browser may cache the preflight result, in seconds
+cors.max-age-seconds=3600
+
+# PYTHON ML MICROSERVICE
+
+# Base URL of the Python inference microservice. This API calls POST <url>/api/v1/predict
+# and sends the payload in snake_case (FastAPI/pydantic default):
+#   {"company_id": 1, "transactions": [{"amount": 100.00, "type": "INCOME",
+#                                       "category": "Sales", "date": "2026-01-31"}]}
+# and expects back:
+#   {"risk_score": 0.78, "risk_level": "HIGH", "shap_values": {...}, "generated_alerts": [...]}
+python.ml.service.url=http://localhost:8000
+# Never leave these unbounded: a hung microservice would block the request thread forever
+python.ml.service.connect-timeout-ms=5000
+python.ml.service.response-timeout-ms=30000
+# Inference + SHAP can exceed the 256KB default in-memory buffer of the codecs
+python.ml.service.max-response-size-bytes=4194304
+
+# Shared secret sent to the microservice on every call, so that reaching it on
+# the network is not enough to run inference on it. The microservice must reject
+# any request that does not carry it (FastAPI: APIKeyHeader(name="X-API-Key")).
+# Generate your own, for example:  openssl rand -base64 32
+# Left empty the calls go out unauthenticated and a warning is logged at startup:
+# acceptable only for local development against localhost.
+python.ml.service.api-key=CHANGE_ME_ML_SHARED_SECRET
+# Override only if the microservice expects a different header name:
+#python.ml.service.api-key-header=X-API-Key
