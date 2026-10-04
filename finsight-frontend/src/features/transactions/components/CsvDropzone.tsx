@@ -13,6 +13,7 @@ const TYPE_MAP: Record<string, TransactionRecord["tipo"]> = { INCOME: "INGRESO",
 const MAX_SIZE_MB = 10;
 
 type UploadStatus = "idle" | "validating" | "success" | "error";
+type NewRecord = Omit<TransactionRecord, "id" | "batchId">;
 
 export default function CsvDropzone() {
   const { addUpload } = useTransactions();
@@ -31,13 +32,15 @@ export default function CsvDropzone() {
   function finishWithError(file: File, errorMessage: string) {
     setStatus("error");
     setMessage(errorMessage);
-    addUpload([], {
-      fileName: file.name,
-      date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
-      size: formatSize(file.size),
-      status: "Error",
-      errorMessage,
-    });
+    if (activeCompany) {
+      addUpload(activeCompany.id, [], {
+        fileName: file.name,
+        date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+        size: formatSize(file.size),
+        status: "Error",
+        errorMessage,
+      });
+    }
     showToast(errorMessage, "error");
   }
 
@@ -54,7 +57,9 @@ export default function CsvDropzone() {
       return;
     }
     if (!activeCompany) {
-      finishWithError(file, "Select or create a company before uploading data.");
+      setStatus("error");
+      setMessage("Select or create a company before uploading data.");
+      showToast("Select or create a company before uploading data.", "error");
       return;
     }
 
@@ -70,7 +75,7 @@ export default function CsvDropzone() {
           return;
         }
 
-        const records: TransactionRecord[] = [];
+        const records: NewRecord[] = [];
         for (const row of results.data) {
           const monto = parseFloat(row["amount"]);
           const tipo = TYPE_MAP[row["type"]?.trim().toUpperCase()];
@@ -92,7 +97,7 @@ export default function CsvDropzone() {
         try {
           const result = await uploadTransactionsCsv(activeCompany.id, file);
 
-          addUpload(records, {
+          addUpload(activeCompany.id, records, {
             fileName: file.name,
             date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
             size: formatSize(file.size),
@@ -133,20 +138,15 @@ export default function CsvDropzone() {
       }`}
     >
       <input ref={inputRef} type="file" accept=".csv" onChange={handleFileSelect} className="hidden" />
-
       <UploadCloud className="h-8 w-8 text-slate-400" strokeWidth={1.5} />
 
       {status === "idle" && (
         <>
-          <p className="mt-3 text-sm font-medium text-slate-700">
-            Drag & drop your CSV file here, or click to browse
-          </p>
+          <p className="mt-3 text-sm font-medium text-slate-700">Drag & drop your CSV file here, or click to browse</p>
           <p className="mt-1 text-xs text-slate-400">Maximum size: {MAX_SIZE_MB} MB</p>
         </>
       )}
-      {status === "validating" && (
-        <p className="mt-3 text-sm font-medium text-slate-500">Validating {fileName}...</p>
-      )}
+      {status === "validating" && <p className="mt-3 text-sm font-medium text-slate-500">Validating {fileName}...</p>}
       {status === "success" && (
         <>
           <p className="mt-3 flex items-center gap-1.5 text-sm font-medium text-green-600">
