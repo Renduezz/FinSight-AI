@@ -5,19 +5,26 @@ interface ApiOptions extends RequestInit {
 }
 
 export async function apiFetch<T>(path: string, options: ApiOptions = {}): Promise<T> {
-  const { auth = true, headers, ...rest } = options;
+  const { auth = true, headers, body, ...rest } = options;
 
-  const finalHeaders: Record<string, string> = {
-    "Content-Type": "application/json",
-    ...(headers as Record<string, string>),
-  };
+  // Si el body es un archivo (FormData), dejamos que el navegador fije su
+  // propio Content-Type con el "boundary" correcto. Si nosotros forzamos
+  // "application/json" (o cualquier otro valor) encima, el backend no puede
+  // interpretar el archivo como multipart.
+  const isFormData = body instanceof FormData;
+
+  const finalHeaders: Record<string, string> = {};
+  if (!isFormData) {
+    finalHeaders["Content-Type"] = "application/json";
+  }
+  Object.assign(finalHeaders, headers as Record<string, string>);
 
   if (auth) {
     const token = typeof window !== "undefined" ? localStorage.getItem("finsight_token") : null;
     if (token) finalHeaders["Authorization"] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE_URL}${path}`, { ...rest, headers: finalHeaders });
+  const response = await fetch(`${API_BASE_URL}${path}`, { ...rest, body, headers: finalHeaders });
 
   if (!response.ok) {
     const errorBody = await response.json().catch(() => null);
