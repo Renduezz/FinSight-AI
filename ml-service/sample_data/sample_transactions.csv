@@ -1,0 +1,16 @@
+type,category,amount,transaction_date,description
+INCOME,Ventas,5000000,2026-07-03,Venta mayorista julio
+EXPENSE,Nomina,3200000,2026-07-05,Pago quincena
+EXPENSE,Arriendo,1200000,2026-07-06,Arriendo local
+EXPENSE,Servicios,320000,2026-07-08,Agua y luz
+INCOME,Ventas,4200000,2026-07-15,Venta al detal
+EXPENSE,Nomina,3200000,2026-07-20,Pago quincena
+INCOME,Ventas,3900000,2026-07-28,Venta mayorista
+INCOME,Ventas,6100000,2026-08-02,Venta mayorista agosto
+EXPENSE,Nomina,3300000,2026-08-05,Pago quincena
+EXPENSE,Arriendo,1200000,2026-08-06,Arriendo local
+EXPENSE,Servicios,290000,2026-08-08,Agua y luz
+INCOME,Ventas,3100000,2026-08-14,Venta al detal
+EXPENSE,Nomina,3300000,2026-08-20,Pago quincena
+EXPENSE,Publicidad,500000,2026-08-22,Campaña redes sociales
+INCOME,Ventas,2800000,2026-08-27,Venta mayorista
