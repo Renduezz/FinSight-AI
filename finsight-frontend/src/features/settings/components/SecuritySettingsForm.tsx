@@ -40,7 +40,7 @@ export default function SecuritySettingsForm() {
   async function handleLogoutAllDevices() {
     const confirmed = await confirm({
       title: "Sign out everywhere",
-      message: "This will sign you out from every device where you're currently logged in.",
+      message: "This will sign you out from every device where you are currently logged in.",
       confirmLabel: "Sign out",
       danger: true,
     });
