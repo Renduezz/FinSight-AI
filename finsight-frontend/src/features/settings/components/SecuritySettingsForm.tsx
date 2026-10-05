@@ -105,7 +105,7 @@ export default function SecuritySettingsForm() {
       <div className="rounded-xl border border-red-200 bg-red-50 p-5">
         <p className="text-sm font-semibold text-red-700">Sign out everywhere</p>
         <p className="mt-1 text-xs text-red-600">
-          Ends your session on every device where you're currently logged in.
+          Ends your session on every device where you are currently logged in.
         </p>
         <button
           onClick={handleLogoutAllDevices}
