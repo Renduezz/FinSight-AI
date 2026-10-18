@@ -1,4 +1,4 @@
-﻿package com.finsight.finsight_api.llm;
+package com.finsight.finsight_api.llm;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;

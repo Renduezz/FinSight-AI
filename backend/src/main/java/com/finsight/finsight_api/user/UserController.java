@@ -1,4 +1,4 @@
-﻿package com.finsight.finsight_api.user;
+package com.finsight.finsight_api.user;
 
 import com.finsight.finsight_api.user.UpdateEmailRequest;
 import com.finsight.finsight_api.user.UpdatePasswordRequest;

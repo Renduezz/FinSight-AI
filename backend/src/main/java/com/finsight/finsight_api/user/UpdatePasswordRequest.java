@@ -1,4 +1,4 @@
-﻿package com.finsight.finsight_api.user;
+package com.finsight.finsight_api.user;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
