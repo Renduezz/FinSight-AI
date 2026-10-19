@@ -1,7 +1,5 @@
 package com.finsight.finsight_api.user;
 
-import com.finsight.finsight_api.user.UpdateEmailRequest;
-import com.finsight.finsight_api.user.UpdatePasswordRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +13,11 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getCurrentUser() {
+        return ResponseEntity.ok(userService.getCurrentUserProfile());
+    }
 
     @PatchMapping("/email")
     public ResponseEntity<Map<String, String>> updateEmail(@Valid @RequestBody UpdateEmailRequest request) {

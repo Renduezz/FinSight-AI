@@ -4,9 +4,18 @@ import { useState } from "react";
 import Link from "next/link";
 import { Search, Bell } from "lucide-react";
 import { useCompany } from "@/shared/context/CompanyContext";
+import { useAuth } from "@/shared/context/AuthContext";
+
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
 
 export default function Header() {
   const { companies, activeCompany, setActiveCompanyId } = useCompany();
+  const { user, logout } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
 
   return (
@@ -44,9 +53,11 @@ export default function Header() {
             onClick={() => setProfileOpen((prev) => !prev)}
             className="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-slate-50"
           >
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white">JD</span>
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white">
+              {user ? getInitials(user.name) : "?"}
+            </span>
             <span className="hidden text-left text-sm sm:block">
-              <span className="block font-medium text-slate-700">Jane Doe</span>
+              <span className="block font-medium text-slate-700">{user?.name ?? "..."}</span>
               <span className="block text-xs text-slate-400">{activeCompany?.sector ?? "—"}</span>
             </span>
           </button>
@@ -54,7 +65,12 @@ export default function Header() {
           {profileOpen && (
             <div className="absolute right-0 mt-2 w-44 rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
               <Link href="/settings" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Settings</Link>
-              <a href="/login" className="block px-4 py-2 text-sm text-red-600 hover:bg-slate-50">Log out</a>
+              <button
+                onClick={logout}
+                className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-slate-50"
+              >
+                Log out
+              </button>
             </div>
           )}
         </div>

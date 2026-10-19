@@ -4,9 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import { login } from "@/features/auth/services/authApi";
+import { useAuth } from "@/shared/context/AuthContext";
 
 export default function LoginForm() {
   const router = useRouter();
+  const { refreshUser } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -22,6 +24,7 @@ export default function LoginForm() {
     try {
       const { token } = await login(email, password);
       localStorage.setItem("finsight_token", token);
+      await refreshUser();
       router.push("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Invalid credentials.");

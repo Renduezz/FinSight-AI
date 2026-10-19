@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/shared/context/AuthContext";
 import { TransactionsProvider } from "@/shared/context/TransactionsContext";
 import { CompanyProvider } from "@/shared/context/CompanyContext";
 import { ConfirmProvider } from "@/shared/components/ConfirmDialog";
@@ -23,9 +24,11 @@ export default function RootLayout({
       <body className={inter.className}>
         <ToastProvider>
           <ConfirmProvider>
-            <CompanyProvider>
-              <TransactionsProvider>{children}</TransactionsProvider>
-            </CompanyProvider>
+            <AuthProvider>
+              <CompanyProvider>
+                <TransactionsProvider>{children}</TransactionsProvider>
+              </CompanyProvider>
+            </AuthProvider>
           </ConfirmProvider>
         </ToastProvider>
       </body>

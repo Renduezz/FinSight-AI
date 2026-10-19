@@ -4,6 +4,12 @@ interface AuthResponse {
   token: string;
 }
 
+export interface CurrentUser {
+  id: number;
+  name: string;
+  email: string;
+}
+
 export function login(email: string, password: string) {
   return apiFetch<AuthResponse>("/auth/login", {
     method: "POST",
@@ -18,4 +24,8 @@ export function register(fullName: string, email: string, password: string) {
     body: JSON.stringify({ name: fullName, email, password }),
     auth: false,
   });
+}
+
+export function getCurrentUser() {
+  return apiFetch<CurrentUser>("/users/settings/me");
 }
