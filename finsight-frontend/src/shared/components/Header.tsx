@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Search, Bell } from "lucide-react";
+import { Search, Bell, Menu } from "lucide-react";
 import { useCompany } from "@/shared/context/CompanyContext";
 import { useAuth } from "@/shared/context/AuthContext";
 
@@ -13,15 +13,27 @@ function getInitials(name: string): string {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
-export default function Header() {
+interface HeaderProps {
+  onMenuClick?: () => void;
+}
+
+export default function Header({ onMenuClick }: HeaderProps) {
   const { companies, activeCompany, setActiveCompanyId } = useCompany();
   const { user, logout } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
 
   return (
-    <header className="flex h-16 items-center justify-between gap-4 border-b border-slate-200 bg-white px-6">
-      <div className="flex flex-1 items-center gap-3">
-        <div className="relative w-full max-w-xs">
+    <header className="flex h-16 items-center justify-between gap-2 border-b border-slate-200 bg-white px-3 sm:gap-4 sm:px-6">
+      <div className="flex flex-1 items-center gap-2 sm:gap-3">
+        <button
+          onClick={onMenuClick}
+          aria-label="Abrir menu"
+          className="rounded-lg p-2 text-slate-600 hover:bg-slate-50 md:hidden"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+
+        <div className="relative w-full max-w-[9rem] sm:max-w-xs">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
@@ -33,7 +45,7 @@ export default function Header() {
         <select
           value={activeCompany?.id ?? ""}
           onChange={(e) => setActiveCompanyId(Number(e.target.value))}
-          className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 outline-none focus:border-primary"
+          className="max-w-[6rem] rounded-lg border border-slate-300 px-2 py-1.5 text-sm font-medium text-slate-700 outline-none focus:border-primary sm:max-w-none sm:px-3"
         >
           {companies.length === 0 && <option value="">No companies</option>}
           {companies.map((company) => (
@@ -42,7 +54,7 @@ export default function Header() {
         </select>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-4">
         <button aria-label="Notifications" className="relative rounded-full p-2 text-slate-500 hover:bg-slate-50">
           <Bell className="h-5 w-5" />
           <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-red-500" />
