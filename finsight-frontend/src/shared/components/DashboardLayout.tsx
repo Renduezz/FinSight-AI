@@ -1,6 +1,7 @@
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import Footer from "./Footer";
+import FloatingChatWidget from "@/features/assistant/components/FloatingChatWidget";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -15,6 +16,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <main className="flex-1 overflow-y-auto p-6">{children}</main>
         <Footer />
       </div>
+      <FloatingChatWidget />
     </div>
   );
 }
