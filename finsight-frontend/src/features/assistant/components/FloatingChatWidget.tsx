@@ -12,6 +12,39 @@ interface ChatMessage {
   content: string;
 }
 
+const MESSAGES_KEY = "finsight_chat_messages";
+const OPEN_KEY = "finsight_chat_open";
+
+const WELCOME_MESSAGE: ChatMessage = {
+  id: "welcome",
+  role: "assistant",
+  content:
+    'Hola, soy tu asistente financiero. Preguntame sobre finanzas y contabilidad, o sobre como usar FinSight AI, por ejemplo: "que es el flujo de caja" o "como subo mis transacciones".',
+};
+
+function loadMessages(): ChatMessage[] {
+  if (typeof window === "undefined") return [WELCOME_MESSAGE];
+  try {
+    const raw = sessionStorage.getItem(MESSAGES_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch {
+    // sessionStorage no disponible o datos corruptos: seguimos con el default
+  }
+  return [WELCOME_MESSAGE];
+}
+
+function loadIsOpen(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return sessionStorage.getItem(OPEN_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
 const markdownComponents = {
   h1: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h1 className="mb-1 mt-2 text-sm font-bold text-slate-800" {...props} />
@@ -41,15 +74,8 @@ const markdownComponents = {
 };
 
 export default function FloatingChatWidget() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: "welcome",
-      role: "assistant",
-      content:
-        'Hola, soy tu asistente financiero. Preguntame sobre finanzas y contabilidad, por ejemplo: "que es el flujo de caja".',
-    },
-  ]);
+  const [isOpen, setIsOpen] = useState(loadIsOpen);
+  const [messages, setMessages] = useState<ChatMessage[]>(loadMessages);
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
   const showToast = useToast();
@@ -58,6 +84,22 @@ export default function FloatingChatWidget() {
   useEffect(() => {
     if (isOpen) bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isOpen]);
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(MESSAGES_KEY, JSON.stringify(messages));
+    } catch {
+      // ignorar si sessionStorage no esta disponible
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(OPEN_KEY, String(isOpen));
+    } catch {
+      // ignorar si sessionStorage no esta disponible
+    }
+  }, [isOpen]);
 
   async function handleSend() {
     const pregunta = input.trim();
