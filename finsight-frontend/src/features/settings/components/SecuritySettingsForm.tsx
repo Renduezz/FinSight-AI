@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { LogOut } from "lucide-react";
 import { useConfirm } from "@/shared/components/ConfirmDialog";
+import { updatePassword } from "@/features/settings/services/settingsApi";
 
 export default function SecuritySettingsForm() {
   const confirm = useConfirm();
@@ -13,7 +14,7 @@ export default function SecuritySettingsForm() {
   const [successMessage, setSuccessMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     setSuccessMessage("");
@@ -28,13 +29,17 @@ export default function SecuritySettingsForm() {
     }
 
     setIsSaving(true);
-    setTimeout(() => {
-      setIsSaving(false);
+    try {
+      await updatePassword(currentPassword, newPassword);
       setSuccessMessage("Password updated successfully.");
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
-    }, 800);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not update password.");
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   async function handleLogoutAllDevices() {

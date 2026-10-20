@@ -1,22 +1,58 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/shared/context/AuthContext";
+import { updateName, updateEmail } from "@/features/settings/services/settingsApi";
+import { useToast } from "@/shared/components/Toast";
 
 export default function ProfileSettingsForm() {
-  const [name, setName] = useState("Jane Doe");
-  const [email, setEmail] = useState("jane@acmecorp.com");
+  const { user, refreshUser } = useAuth();
+  const showToast = useToast();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [savedMessage, setSavedMessage] = useState("");
 
-  function handleSubmit(e: React.FormEvent) {
+  useEffect(() => {
+    if (user) {
+      setName(user.name);
+      setEmail(user.email);
+    }
+  }, [user]);
+
+  const nameChanged = user ? name.trim() !== user.name : false;
+  const emailChanged = user ? email.trim() !== user.email : false;
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!user) return;
+
     setIsSaving(true);
     setSavedMessage("");
-    // Placeholder: en el futuro -> PUT /users/me
-    setTimeout(() => {
-      setIsSaving(false);
+
+    try {
+      if (emailChanged && !currentPassword) {
+        showToast("Enter your current password to change your email.", "error");
+        setIsSaving(false);
+        return;
+      }
+
+      if (nameChanged) {
+        await updateName(name.trim());
+      }
+      if (emailChanged) {
+        await updateEmail(email.trim(), currentPassword);
+      }
+
+      await refreshUser();
+      setCurrentPassword("");
       setSavedMessage("Profile updated successfully.");
-    }, 800);
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Could not update profile.", "error");
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   return (
@@ -42,13 +78,27 @@ export default function ProfileSettingsForm() {
             className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-primary"
           />
         </div>
+
+        {emailChanged && (
+          <div>
+            <label className="mb-1 block text-xs font-medium text-slate-600">
+              Current password <span className="text-slate-400">(required to change email)</span>
+            </label>
+            <input
+              type="password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-primary"
+            />
+          </div>
+        )}
       </div>
 
       {savedMessage && <p className="mt-3 text-sm text-green-600">{savedMessage}</p>}
 
       <button
         type="submit"
-        disabled={isSaving}
+        disabled={isSaving || (!nameChanged && !emailChanged)}
         className="mt-4 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary-dark disabled:opacity-60"
       >
         {isSaving ? "Saving..." : "Save changes"}
