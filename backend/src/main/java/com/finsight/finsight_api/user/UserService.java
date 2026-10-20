@@ -24,6 +24,13 @@ public class UserService {
     }
 
     @Transactional
+    public void updateName(UpdateNameRequest request) {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        currentUser.setName(request.getNewName());
+        userRepository.save(currentUser);
+    }
+
+    @Transactional
     public void updateEmail(UpdateEmailRequest request) {
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

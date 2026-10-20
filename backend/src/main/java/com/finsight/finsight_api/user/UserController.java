@@ -19,6 +19,12 @@ public class UserController {
         return ResponseEntity.ok(userService.getCurrentUserProfile());
     }
 
+    @PatchMapping("/name")
+    public ResponseEntity<Map<String, String>> updateName(@Valid @RequestBody UpdateNameRequest request) {
+        userService.updateName(request);
+        return ResponseEntity.ok(Map.of("message", "Name updated successfully."));
+    }
+
     @PatchMapping("/email")
     public ResponseEntity<Map<String, String>> updateEmail(@Valid @RequestBody UpdateEmailRequest request) {
         userService.updateEmail(request);
