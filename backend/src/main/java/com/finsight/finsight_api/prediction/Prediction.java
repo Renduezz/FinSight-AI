@@ -36,8 +36,16 @@ public class Prediction {
     @Column(name = "risk_score", nullable = false, precision = 5, scale = 4)
     private BigDecimal riskScore;
 
+    /** Label returned by the ML service. Nullable so ddl-auto=update can add the column to existing rows. */
+    @Column(name = "risk_level", length = 20)
+    private String riskLevel;
+
     @Column(name = "cashflow_projection", precision = 15, scale = 2)
     private BigDecimal cashflowProjection;
+
+    /** SHAP factors as a JSON array: [{"feature": "...", "impact": 0.0, "value": 0.0}, ...] */
+    @Column(name = "shap_explanation", columnDefinition = "TEXT")
+    private String shapExplanation;
 
     @Column(name = "prediction_date", nullable = false)
     private LocalDateTime predictionDate;
