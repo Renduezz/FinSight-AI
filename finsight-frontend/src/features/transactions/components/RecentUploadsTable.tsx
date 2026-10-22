@@ -2,6 +2,7 @@
 
 import { FileText, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { useTransactions } from "@/shared/context/TransactionsContext";
+import { useLanguage } from "@/shared/context/LanguageContext";
 
 const STATUS_STYLES: Record<string, string> = {
   Completed: "bg-green-50 text-green-600",
@@ -11,23 +12,25 @@ const STATUS_STYLES: Record<string, string> = {
 
 export default function RecentUploadsTable() {
   const { uploads, selectedBatchId, setSelectedBatchId } = useTransactions();
+  const { t } = useLanguage();
+  const u = t.transactions.uploads;
 
   if (uploads.length === 0) return null;
 
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex items-center justify-between">
-        <p className="text-sm font-semibold text-slate-700">Recent Uploads</p>
-        <p className="text-xs text-slate-400">Click a file to view only its data</p>
+        <p className="text-sm font-semibold text-slate-700">{u.title}</p>
+        <p className="text-xs text-slate-400">{u.hint}</p>
       </div>
 
       <table className="mt-4 w-full text-left text-sm">
         <thead>
           <tr className="border-b border-slate-100 text-xs uppercase text-slate-400">
-            <th className="pb-2 font-medium">File Name</th>
-            <th className="pb-2 font-medium">Date</th>
-            <th className="pb-2 font-medium">Size</th>
-            <th className="pb-2 font-medium">Status</th>
+            <th className="pb-2 font-medium">{u.fileName}</th>
+            <th className="pb-2 font-medium">{t.common.date}</th>
+            <th className="pb-2 font-medium">{u.size}</th>
+            <th className="pb-2 font-medium">{u.status}</th>
           </tr>
         </thead>
         <tbody>
@@ -37,7 +40,7 @@ export default function RecentUploadsTable() {
           >
             <td className="flex items-center gap-2 py-3 font-medium text-primary" colSpan={4}>
               {selectedBatchId === "all" && <CheckCircle2 className="h-4 w-4" />}
-              View All Uploads (combined)
+              {u.viewAll}
             </td>
           </tr>
           {uploads.map((upload) => (
@@ -60,7 +63,7 @@ export default function RecentUploadsTable() {
               <td className="py-3 text-slate-500">{upload.size}</td>
               <td className="py-3">
                 <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_STYLES[upload.status]}`}>
-                  {upload.status}
+                  {u.statuses[upload.status] ?? upload.status}
                 </span>
               </td>
             </tr>

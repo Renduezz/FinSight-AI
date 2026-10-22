@@ -1,3 +1,7 @@
+"use client";
+
+import { useLanguage } from "@/shared/context/LanguageContext";
+
 interface CategorySlice {
   name: string;
   value: number;
@@ -6,14 +10,15 @@ interface CategorySlice {
 const PALETTE = ["#2563EB", "#EF4444", "#F59E0B", "#10B981", "#8B5CF6", "#EC4899", "#06B6D4"];
 
 export default function CategoryBreakdownList({ data }: { data: CategorySlice[] }) {
+  const { t } = useLanguage();
   const total = data.reduce((sum, d) => sum + d.value, 0);
 
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-      <p className="text-sm font-medium text-slate-700">Expenses by Category</p>
+      <p className="text-sm font-medium text-slate-700">{t.dashboard.expensesByCategory}</p>
 
       {data.length === 0 ? (
-        <p className="mt-4 text-sm text-slate-400">No expense data yet.</p>
+        <p className="mt-4 text-sm text-slate-400">{t.dashboard.noExpenseData}</p>
       ) : (
         <div className="mt-4 space-y-3">
           {data.map((item, index) => {

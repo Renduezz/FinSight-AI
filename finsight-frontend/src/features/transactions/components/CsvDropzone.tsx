@@ -7,6 +7,7 @@ import { useTransactions, TransactionRecord } from "@/shared/context/Transaction
 import { useCompany } from "@/shared/context/CompanyContext";
 import { uploadTransactionsCsv } from "@/features/transactions/services/transactionApi";
 import { useToast } from "@/shared/components/Toast";
+import { useLanguage } from "@/shared/context/LanguageContext";
 
 const REQUIRED_HEADERS = ["date", "type", "category", "amount", "description"];
 const TYPE_MAP: Record<string, TransactionRecord["tipo"]> = { INCOME: "INGRESO", EXPENSE: "GASTO" };
@@ -19,6 +20,8 @@ export default function CsvDropzone() {
   const { addUpload } = useTransactions();
   const { activeCompany } = useCompany();
   const showToast = useToast();
+  const { t } = useLanguage();
+  const d = t.transactions.dropzone;
   const [status, setStatus] = useState<UploadStatus>("idle");
   const [fileName, setFileName] = useState("");
   const [message, setMessage] = useState("");
@@ -49,17 +52,17 @@ export default function CsvDropzone() {
     setStatus("validating");
 
     if (!file.name.toLowerCase().endsWith(".csv")) {
-      finishWithError(file, "The file must have a .csv extension.");
+      finishWithError(file, d.mustBeCsv);
       return;
     }
     if (file.size > MAX_SIZE_MB * 1024 * 1024) {
-      finishWithError(file, `The file exceeds the maximum size of ${MAX_SIZE_MB} MB.`);
+      finishWithError(file, d.tooLarge(MAX_SIZE_MB));
       return;
     }
     if (!activeCompany) {
       setStatus("error");
-      setMessage("Select or create a company before uploading data.");
-      showToast("Select or create a company before uploading data.", "error");
+      setMessage(d.selectCompany);
+      showToast(d.selectCompany, "error");
       return;
     }
 
@@ -71,7 +74,7 @@ export default function CsvDropzone() {
         const missing = REQUIRED_HEADERS.filter((h) => h !== "description" && !headers.includes(h));
 
         if (missing.length > 0) {
-          finishWithError(file, `Missing columns: ${missing.join(", ")}`);
+          finishWithError(file, d.missingColumns(missing.join(", ")));
           return;
         }
 
@@ -90,7 +93,7 @@ export default function CsvDropzone() {
         }
 
         if (records.length === 0) {
-          finishWithError(file, "No valid rows were found in the file.");
+          finishWithError(file, d.noValidRows);
           return;
         }
 
@@ -105,13 +108,13 @@ export default function CsvDropzone() {
           });
 
           setStatus("success");
-          setMessage(`${result.recordsProcessed} rows saved to the database.`);
-          showToast(`${result.recordsProcessed} rows uploaded successfully.`, "success");
+          setMessage(d.rowsSaved(result.recordsProcessed));
+          showToast(d.rowsUploaded(result.recordsProcessed), "success");
         } catch (err) {
-          finishWithError(file, err instanceof Error ? err.message : "The server rejected the file.");
+          finishWithError(file, err instanceof Error ? err.message : d.serverRejected);
         }
       },
-      error: () => finishWithError(file, "The file could not be read."),
+      error: () => finishWithError(file, d.couldNotRead),
     });
   }
 
@@ -142,11 +145,11 @@ export default function CsvDropzone() {
 
       {status === "idle" && (
         <>
-          <p className="mt-3 text-sm font-medium text-slate-700">Drag & drop your CSV file here, or click to browse</p>
-          <p className="mt-1 text-xs text-slate-400">Maximum size: {MAX_SIZE_MB} MB</p>
+          <p className="mt-3 text-sm font-medium text-slate-700">{d.prompt}</p>
+          <p className="mt-1 text-xs text-slate-400">{d.maxSize(MAX_SIZE_MB)}</p>
         </>
       )}
-      {status === "validating" && <p className="mt-3 text-sm font-medium text-slate-500">Validating {fileName}...</p>}
+      {status === "validating" && <p className="mt-3 text-sm font-medium text-slate-500">{d.validating(fileName)}</p>}
       {status === "success" && (
         <>
           <p className="mt-3 flex items-center gap-1.5 text-sm font-medium text-green-600">

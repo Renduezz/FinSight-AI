@@ -5,10 +5,13 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import { login } from "@/features/auth/services/authApi";
 import { useAuth } from "@/shared/context/AuthContext";
+import { useLanguage } from "@/shared/context/LanguageContext";
 
 export default function LoginForm() {
   const router = useRouter();
   const { refreshUser } = useAuth();
+  const { t } = useLanguage();
+  const l = t.auth.login;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -27,7 +30,7 @@ export default function LoginForm() {
       await refreshUser();
       router.push("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Invalid credentials.");
+      setError(err instanceof Error ? err.message : l.invalidCredentials);
     } finally {
       setIsSubmitting(false);
     }
@@ -35,14 +38,14 @@ export default function LoginForm() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-900">Welcome back</h1>
+      <h1 className="text-2xl font-bold text-slate-900">{l.title}</h1>
       <p className="mt-2 text-sm text-slate-500">
-        Please enter your details to access your financial intelligence portal.
+        {l.subtitle}
       </p>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-5">
         <div>
-          <label htmlFor="email" className="mb-1 block text-sm font-medium text-slate-700">Email Address</label>
+          <label htmlFor="email" className="mb-1 block text-sm font-medium text-slate-700">{t.auth.email}</label>
           <input
             id="email"
             type="email"
@@ -55,7 +58,7 @@ export default function LoginForm() {
         </div>
 
         <div>
-          <label htmlFor="password" className="mb-1 block text-sm font-medium text-slate-700">Password</label>
+          <label htmlFor="password" className="mb-1 block text-sm font-medium text-slate-700">{t.auth.password}</label>
           <div className="relative">
             <input
               id="password"
@@ -70,7 +73,7 @@ export default function LoginForm() {
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
-              aria-label="Toggle password visibility"
+              aria-label={t.auth.togglePassword}
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
@@ -85,9 +88,9 @@ export default function LoginForm() {
               onChange={(e) => setRememberMe(e.target.checked)}
               className="rounded border-slate-300 text-primary focus:ring-primary"
             />
-            Remember for 30 days
+            {l.rememberMe}
           </label>
-          <a href="#" className="font-medium text-primary hover:underline">Forgot password?</a>
+          <a href="#" className="font-medium text-primary hover:underline">{l.forgotPassword}</a>
         </div>
 
         {error && <p className="text-sm text-red-600">{error}</p>}
@@ -97,13 +100,13 @@ export default function LoginForm() {
           disabled={isSubmitting}
           className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white transition hover:bg-primary-dark disabled:opacity-60"
         >
-          {isSubmitting ? "Logging in..." : "Log In →"}
+          {isSubmitting ? l.submitting : l.submit}
         </button>
       </form>
 
       <p className="mt-6 text-center text-sm text-slate-500">
-        Don&apos;t have an account?{" "}
-        <a href="/register" className="font-medium text-primary hover:underline">Create account</a>
+        {l.noAccount}{" "}
+        <a href="/register" className="font-medium text-primary hover:underline">{l.createAccount}</a>
       </p>
     </div>
   );

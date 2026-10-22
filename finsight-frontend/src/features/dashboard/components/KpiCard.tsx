@@ -1,3 +1,7 @@
+"use client";
+
+import { useLanguage } from "@/shared/context/LanguageContext";
+
 interface KpiCardProps {
   label: string;
   value: string;
@@ -6,6 +10,7 @@ interface KpiCardProps {
 }
 
 export default function KpiCard({ label, value, changePercent, invert = false }: KpiCardProps) {
+  const { t } = useLanguage();
   const wentUp = changePercent >= 0;
   // Normalmente "subir" = bueno (verde). Pero para Gastos, subir es malo,
   // así que invertimos qué color corresponde a cada dirección.
@@ -20,7 +25,7 @@ export default function KpiCard({ label, value, changePercent, invert = false }:
         <span className={isGood ? "text-green-600" : "text-red-600"}>
           {wentUp ? "▲" : "▼"} {Math.abs(changePercent).toFixed(1)}%
         </span>
-        <span className="text-slate-400">vs. previous period</span>
+        <span className="text-slate-400">{t.dashboard.vsPrevious}</span>
       </div>
     </div>
   );

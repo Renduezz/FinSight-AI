@@ -8,32 +8,34 @@ import CategoryBreakdownChart from "@/features/dashboard/components/CategoryBrea
 import CategoryBreakdownList from "@/features/dashboard/components/CategoryBreakdownList";
 import { useTransactions, PeriodFilter } from "@/shared/context/TransactionsContext";
 import { UploadCloud } from "lucide-react";
+import { useLanguage } from "@/shared/context/LanguageContext";
 
 export default function DashboardPage() {
   const {
     transactions, kpis, kpiChanges, trendData, categoryBreakdown,
     period, setPeriod, availablePeriodKeys, selectedPeriodKey, setSelectedPeriodKey, formatPeriodKey,
   } = useTransactions();
+  const { t } = useLanguage();
   const hasData = transactions.length > 0;
 
   const kpiCards = [
-    { label: "Total Income", value: `$${kpis.totalIncome.toLocaleString()}`, changePercent: kpiChanges.totalIncome },
-    { label: "Total Expenses", value: `$${kpis.totalExpenses.toLocaleString()}`, changePercent: kpiChanges.totalExpenses, invert: true },
-    { label: "Net Profit", value: `$${kpis.netProfit.toLocaleString()}`, changePercent: kpiChanges.netProfit },
-    { label: "Cash Flow", value: `$${kpis.cashFlow.toLocaleString()}`, changePercent: kpiChanges.cashFlow },
+    { label: t.dashboard.totalIncome, value: `$${kpis.totalIncome.toLocaleString()}`, changePercent: kpiChanges.totalIncome },
+    { label: t.dashboard.totalExpenses, value: `$${kpis.totalExpenses.toLocaleString()}`, changePercent: kpiChanges.totalExpenses, invert: true },
+    { label: t.dashboard.netProfit, value: `$${kpis.netProfit.toLocaleString()}`, changePercent: kpiChanges.netProfit },
+    { label: t.dashboard.cashFlow, value: `$${kpis.cashFlow.toLocaleString()}`, changePercent: kpiChanges.cashFlow },
   ];
 
   const incomeVsExpenses = [
-    { name: "Income", value: kpis.totalIncome },
-    { name: "Expenses", value: kpis.totalExpenses },
+    { key: "income", name: t.common.income, value: kpis.totalIncome },
+    { key: "expenses", name: t.common.expenses, value: kpis.totalExpenses },
   ];
 
   return (
     <DashboardLayout>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Executive Dashboard</h1>
-          <p className="mt-1 text-sm text-slate-500">Real-time financial overview of your company.</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t.dashboard.title}</h1>
+          <p className="mt-1 text-sm text-slate-500">{t.dashboard.subtitle}</p>
         </div>
         <div className="flex items-center gap-2">
           <select
@@ -41,9 +43,9 @@ export default function DashboardPage() {
             onChange={(e) => setPeriod(e.target.value as PeriodFilter)}
             className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-700 outline-none focus:border-primary"
           >
-            <option value="monthly">Monthly</option>
-            <option value="quarterly">Quarterly</option>
-            <option value="yearly">Yearly</option>
+            <option value="monthly">{t.dashboard.monthly}</option>
+            <option value="quarterly">{t.dashboard.quarterly}</option>
+            <option value="yearly">{t.dashboard.yearly}</option>
           </select>
 
           {availablePeriodKeys.length > 0 && (
@@ -59,16 +61,16 @@ export default function DashboardPage() {
           )}
 
           <Link href="/transactions" className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-1.5 text-sm font-semibold text-white hover:bg-primary-dark">
-            <UploadCloud className="h-4 w-4" /> Upload Data
+            <UploadCloud className="h-4 w-4" /> {t.dashboard.uploadData}
           </Link>
         </div>
       </div>
 
       {!hasData ? (
         <div className="mt-6 rounded-xl border border-dashed border-slate-300 bg-white p-10 text-center">
-          <p className="text-sm font-medium text-slate-600">No data for this period</p>
+          <p className="text-sm font-medium text-slate-600">{t.dashboard.noDataTitle}</p>
           <p className="mt-1 text-sm text-slate-400">
-            Upload a CSV file, or pick a different period above.
+            {t.dashboard.noDataHint}
           </p>
         </div>
       ) : (

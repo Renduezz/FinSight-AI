@@ -6,6 +6,7 @@ import { TransactionsProvider } from "@/shared/context/TransactionsContext";
 import { CompanyProvider } from "@/shared/context/CompanyContext";
 import { ConfirmProvider } from "@/shared/components/ConfirmDialog";
 import { ToastProvider } from "@/shared/components/Toast";
+import { LanguageProvider } from "@/shared/context/LanguageContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,15 +23,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ToastProvider>
-          <ConfirmProvider>
-            <AuthProvider>
-              <CompanyProvider>
-                <TransactionsProvider>{children}</TransactionsProvider>
-              </CompanyProvider>
-            </AuthProvider>
-          </ConfirmProvider>
-        </ToastProvider>
+        <LanguageProvider>
+          <ToastProvider>
+            <ConfirmProvider>
+              <AuthProvider>
+                <CompanyProvider>
+                  <TransactionsProvider>{children}</TransactionsProvider>
+                </CompanyProvider>
+              </AuthProvider>
+            </ConfirmProvider>
+          </ToastProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

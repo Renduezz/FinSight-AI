@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useMemo, useState, useEffect, ReactNode } from "react";
 import { useCompany } from "./CompanyContext";
+import { useLanguage } from "./LanguageContext";
 
 export interface TransactionRecord {
   id: string;
@@ -73,7 +74,6 @@ interface TransactionsContextValue {
 
 const TransactionsContext = createContext<TransactionsContextValue | null>(null);
 
-const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const STORAGE_KEY = "finsight_transactions_v1";
 
 function periodKeyOf(period: PeriodFilter, d: Date): string {
@@ -92,14 +92,14 @@ function parsePeriodKey(period: PeriodFilter, key: string): Date {
   return new Date(Number(y), Number(m) - 1, 1);
 }
 
-function formatPeriodKeyLabel(period: PeriodFilter, key: string): string {
+function formatPeriodKeyLabel(period: PeriodFilter, key: string, monthNames: string[]): string {
   if (period === "yearly") return key;
   if (period === "quarterly") {
     const [y, q] = key.split("-Q");
     return `Q${q} ${y}`;
   }
   const [y, m] = key.split("-");
-  return `${MONTH_NAMES[Number(m) - 1]} ${y}`;
+  return `${monthNames[Number(m) - 1]} ${y}`;
 }
 
 function getPeriodRange(refDate: Date, period: PeriodFilter, offset: number): [Date, Date] {
@@ -141,6 +141,8 @@ interface PersistedShape {
 }
 
 export function TransactionsProvider({ children }: { children: ReactNode }) {
+  const { t } = useLanguage();
+  const monthNames = t.common.monthNames;
   const { activeCompany } = useCompany();
   const [byCompany, setByCompany] = useState<Record<string, TransactionRecord[]>>({});
   const [uploadsByCompany, setUploadsByCompany] = useState<Record<string, UploadRecord[]>>({});
@@ -266,7 +268,7 @@ export function TransactionsProvider({ children }: { children: ReactNode }) {
     for (const t of transactions) {
       const d = new Date(t.fecha);
       const sortKey = period === "monthly" ? t.fecha : `${d.getFullYear()}-${String(d.getMonth()).padStart(2, "0")}`;
-      const label = period === "monthly" ? String(d.getDate()) : MONTH_NAMES[d.getMonth()];
+      const label = period === "monthly" ? String(d.getDate()) : monthNames[d.getMonth()];
       const entry = map.get(sortKey) ?? { label, income: 0, expenses: 0, sortKey };
       if (t.tipo === "INGRESO") entry.income += t.monto;
       else entry.expenses += t.monto;
@@ -275,7 +277,7 @@ export function TransactionsProvider({ children }: { children: ReactNode }) {
     return Array.from(map.values())
       .sort((a, b) => (a.sortKey < b.sortKey ? -1 : 1))
       .map(({ label, income, expenses }) => ({ month: label, income, expenses }));
-  }, [transactions, period]);
+  }, [transactions, period, monthNames]);
 
   const categoryBreakdown = useMemo<CategorySlice[]>(() => {
     const map = new Map<string, number>();
@@ -311,7 +313,7 @@ export function TransactionsProvider({ children }: { children: ReactNode }) {
         availablePeriodKeys,
         selectedPeriodKey,
         setSelectedPeriodKey,
-        formatPeriodKey: (key) => formatPeriodKeyLabel(period, key),
+        formatPeriodKey: (key) => formatPeriodKeyLabel(period, key, monthNames),
         selectedBatchId,
         setSelectedBatchId,
         addUpload,

@@ -1,4 +1,7 @@
+"use client";
+
 import { AlertTriangle, AlertCircle, Info } from "lucide-react";
+import { useLanguage } from "@/shared/context/LanguageContext";
 
 type Severity = "ALTA" | "MEDIA" | "BAJA";
 
@@ -14,6 +17,7 @@ const SEVERITY_CONFIG: Record<Severity, { label: string; classes: string; icon: 
 };
 
 export default function AlertCard({ severity, message }: AlertCardProps) {
+  const { t } = useLanguage();
   const config = SEVERITY_CONFIG[severity];
   const Icon = config.icon;
 
@@ -21,7 +25,7 @@ export default function AlertCard({ severity, message }: AlertCardProps) {
     <div className={`flex items-start gap-3 rounded-xl border p-4 ${config.classes}`}>
       <Icon className="mt-0.5 h-5 w-5 shrink-0" />
       <div>
-        <span className="text-xs font-bold uppercase tracking-wide">{config.label} severity</span>
+        <span className="text-xs font-bold uppercase tracking-wide">{t.insights.severity(t.common.riskLevels[config.label])}</span>
         <p className="mt-1 text-sm">{message}</p>
       </div>
     </div>

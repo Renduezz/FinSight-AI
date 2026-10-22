@@ -1,3 +1,7 @@
+"use client";
+
+import { useLanguage } from "@/shared/context/LanguageContext";
+
 interface PredictionRecord {
   date: string;
   modelVersion: string;
@@ -12,16 +16,18 @@ const MOCK_HISTORY: PredictionRecord[] = [
 ];
 
 export default function PredictionsHistoryTable() {
+  const { t } = useLanguage();
+
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-      <p className="text-sm font-semibold text-slate-700">Previous Predictions</p>
+      <p className="text-sm font-semibold text-slate-700">{t.predictions.previous}</p>
 
       <table className="mt-4 w-full text-left text-sm">
         <thead>
           <tr className="border-b border-slate-100 text-xs uppercase text-slate-400">
-            <th className="pb-2 font-medium">Date</th>
-            <th className="pb-2 font-medium">Model</th>
-            <th className="pb-2 font-medium">Risk Score</th>
+            <th className="pb-2 font-medium">{t.common.date}</th>
+            <th className="pb-2 font-medium">{t.predictions.model}</th>
+            <th className="pb-2 font-medium">{t.predictions.riskScore}</th>
           </tr>
         </thead>
         <tbody>

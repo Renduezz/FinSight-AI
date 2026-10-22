@@ -9,10 +9,12 @@ import PredictionsHistoryTable from "@/features/predictions/components/Predictio
 import { useTransactions } from "@/shared/context/TransactionsContext";
 import { useCompany } from "@/shared/context/CompanyContext";
 import { runAnalysis, MlAnalysisResult } from "@/features/predictions/services/predictionApi";
+import { useLanguage } from "@/shared/context/LanguageContext";
 
 export default function PredictionsPage() {
   const { transactions, riskHeuristic } = useTransactions();
   const { activeCompany } = useCompany();
+  const { t } = useLanguage();
   const hasData = transactions.length > 0;
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -29,7 +31,7 @@ export default function PredictionsPage() {
       setRealResult(result);
     } catch (err) {
       setRealResult(null);
-      setServiceError(err instanceof Error ? err.message : "The analysis service is not available.");
+      setServiceError(err instanceof Error ? err.message : t.predictions.unavailable);
     } finally {
       setIsAnalyzing(false);
     }
@@ -43,16 +45,16 @@ export default function PredictionsPage() {
       : `$${Math.round(riskHeuristic.projectedCashflow).toLocaleString()}`;
 
   const projectedPeriod = realResult
-    ? `Next period (estimated) — model ${realResult.modelVersion ?? "n/a"}`
-    : "Next period (estimated)";
+    ? t.predictions.nextPeriodModel(realResult.modelVersion ?? "n/a")
+    : t.predictions.nextPeriod;
 
   return (
     <DashboardLayout>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Predictions</h1>
+          <h1 className="text-2xl font-bold text-slate-900">{t.predictions.title}</h1>
           <p className="mt-1 text-sm text-slate-500">
-            AI-powered risk analysis based on your financial history.
+            {t.predictions.subtitle}
           </p>
         </div>
         <button
@@ -61,29 +63,29 @@ export default function PredictionsPage() {
           className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary-dark disabled:opacity-60"
         >
           <Sparkles className="h-4 w-4" />
-          {isAnalyzing ? "Analyzing..." : "Run AI Analysis"}
+          {isAnalyzing ? t.predictions.analyzing : t.predictions.run}
         </button>
       </div>
 
       {!hasData ? (
         <div className="mt-6 rounded-xl border border-dashed border-slate-300 bg-white p-10 text-center">
-          <p className="text-sm font-medium text-slate-600">No data yet</p>
+          <p className="text-sm font-medium text-slate-600">{t.common.noDataYet}</p>
           <p className="mt-1 text-sm text-slate-400">
-            Upload a CSV file in the Transactions section to generate a prediction.
+            {t.predictions.noDataHint}
           </p>
         </div>
       ) : (
         <>
           {realResult ? (
             <div className="mt-3 rounded-lg border border-green-200 bg-green-50 px-4 py-2 text-xs text-green-700">
-              Live result from the Machine Learning service
-              {realResult.riskLevel ? ` — risk level: ${realResult.riskLevel}` : ""}.
+              {t.predictions.liveResult}
+              {realResult.riskLevel ? t.predictions.riskLevel(realResult.riskLevel) : ""}.
             </div>
           ) : (
             <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-700">
               {serviceError
-                ? `Live analysis service unavailable (${serviceError}). Showing a local rule-based estimate instead.`
-                : "This is a rule-based estimate (expenses vs. income ratio). Click \"Run AI Analysis\" to try the live Machine Learning service."}
+                ? t.predictions.serviceDown(serviceError)
+                : t.predictions.ruleBased}
             </div>
           )}
 

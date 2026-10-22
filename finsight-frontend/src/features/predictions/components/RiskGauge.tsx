@@ -1,8 +1,13 @@
+"use client";
+
+import { useLanguage } from "@/shared/context/LanguageContext";
+
 interface RiskGaugeProps {
   riskScore: number; // 0 a 1
 }
 
 export default function RiskGauge({ riskScore }: RiskGaugeProps) {
+  const { t } = useLanguage();
   const percentage = Math.round(riskScore * 100);
 
   const level =
@@ -19,7 +24,7 @@ export default function RiskGauge({ riskScore }: RiskGaugeProps) {
 
   return (
     <div className="flex flex-col items-center rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <p className="self-start text-sm font-medium text-slate-700">Risk Score</p>
+      <p className="self-start text-sm font-medium text-slate-700">{t.predictions.riskScore}</p>
 
       <svg viewBox="0 0 200 110" className="mt-2 w-56">
         {/* Fondo del arco (gris, siempre completo) */}
@@ -46,7 +51,7 @@ export default function RiskGauge({ riskScore }: RiskGaugeProps) {
         className="mt-1 rounded-full px-3 py-1 text-xs font-semibold"
         style={{ backgroundColor: `${color}1A`, color }}
       >
-        {level} Risk
+        {t.predictions.riskBadge(t.common.riskLevels[level])}
       </span>
     </div>
   );

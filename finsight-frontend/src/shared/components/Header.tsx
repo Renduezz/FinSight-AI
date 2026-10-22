@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Search, Bell, Menu } from "lucide-react";
 import { useCompany } from "@/shared/context/CompanyContext";
 import { useAuth } from "@/shared/context/AuthContext";
+import { useLanguage } from "@/shared/context/LanguageContext";
+import LanguageToggle from "./LanguageToggle";
 
 function getInitials(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -20,6 +22,7 @@ interface HeaderProps {
 export default function Header({ onMenuClick }: HeaderProps) {
   const { companies, activeCompany, setActiveCompanyId } = useCompany();
   const { user, logout } = useAuth();
+  const { t } = useLanguage();
   const [profileOpen, setProfileOpen] = useState(false);
 
   return (
@@ -27,7 +30,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
       <div className="flex flex-1 items-center gap-2 sm:gap-3">
         <button
           onClick={onMenuClick}
-          aria-label="Abrir menu"
+          aria-label={t.nav.openMenu}
           className="rounded-lg p-2 text-slate-600 hover:bg-slate-50 md:hidden"
         >
           <Menu className="h-5 w-5" />
@@ -37,7 +40,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
-            placeholder="Global search..."
+            placeholder={t.header.search}
             className="w-full rounded-lg border border-slate-200 bg-slate-50 py-1.5 pl-9 pr-3 text-sm outline-none focus:border-primary"
           />
         </div>
@@ -47,7 +50,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
           onChange={(e) => setActiveCompanyId(Number(e.target.value))}
           className="max-w-[6rem] rounded-lg border border-slate-300 px-2 py-1.5 text-sm font-medium text-slate-700 outline-none focus:border-primary sm:max-w-none sm:px-3"
         >
-          {companies.length === 0 && <option value="">No companies</option>}
+          {companies.length === 0 && <option value="">{t.header.noCompanies}</option>}
           {companies.map((company) => (
             <option key={company.id} value={company.id}>{company.name}</option>
           ))}
@@ -55,7 +58,9 @@ export default function Header({ onMenuClick }: HeaderProps) {
       </div>
 
       <div className="flex items-center gap-2 sm:gap-4">
-        <button aria-label="Notifications" className="relative rounded-full p-2 text-slate-500 hover:bg-slate-50">
+        <LanguageToggle />
+
+        <button aria-label={t.header.notifications} className="relative rounded-full p-2 text-slate-500 hover:bg-slate-50">
           <Bell className="h-5 w-5" />
           <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-red-500" />
         </button>
@@ -76,12 +81,12 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
           {profileOpen && (
             <div className="absolute right-0 mt-2 w-44 rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
-              <Link href="/settings" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Settings</Link>
+              <Link href="/settings" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">{t.header.settings}</Link>
               <button
                 onClick={logout}
                 className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-slate-50"
               >
-                Log out
+                {t.header.logout}
               </button>
             </div>
           )}

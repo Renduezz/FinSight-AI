@@ -1,20 +1,25 @@
+"use client";
+
 import { TrendingUp, TrendingDown } from "lucide-react";
+import { useLanguage } from "@/shared/context/LanguageContext";
+import type { Translations } from "@/shared/i18n/translations";
 
 interface ShapFactor {
-  variable: string;
+  variable: keyof Translations["insights"]["factors"];
   impact: number; // positivo = aumenta el riesgo, negativo = lo reduce
 }
 
 // Placeholder: en el futuro vendrá de GET /companies/{id}/predictions/{id}/shap
 const MOCK_FACTORS: ShapFactor[] = [
-  { variable: "Irregular cash flow in the last 3 months", impact: 0.18 },
-  { variable: "High concentration of expenses in Payroll", impact: 0.12 },
-  { variable: "Declining sales trend", impact: 0.08 },
-  { variable: "Consistent monthly income", impact: -0.14 },
-  { variable: "Low reliance on a single client", impact: -0.07 },
+  { variable: "irregularCashflow", impact: 0.18 },
+  { variable: "payrollConcentration", impact: 0.12 },
+  { variable: "decliningSales", impact: 0.08 },
+  { variable: "consistentIncome", impact: -0.14 },
+  { variable: "lowClientReliance", impact: -0.07 },
 ];
 
 export default function ShapFactorsList() {
+  const { t } = useLanguage();
   // Para dibujar las barras proporcionalmente, usamos el impacto más grande
   // (en valor absoluto) como referencia del 100% de ancho.
   const maxImpact = Math.max(...MOCK_FACTORS.map((f) => Math.abs(f.impact)));
@@ -22,10 +27,10 @@ export default function ShapFactorsList() {
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
       <p className="text-sm font-semibold text-slate-700">
-        What influences this risk score?
+        {t.insights.shapTitle}
       </p>
       <p className="mt-1 text-xs text-slate-400">
-        Based on SHAP (SHapley Additive exPlanations) values from the ML model.
+        {t.insights.shapSubtitle}
       </p>
 
       <div className="mt-5 space-y-4">
@@ -42,7 +47,7 @@ export default function ShapFactorsList() {
                   ) : (
                     <TrendingUp className="h-4 w-4 text-red-600" />
                   )}
-                  {factor.variable}
+                  {t.insights.factors[factor.variable]}
                 </span>
                 <span className={isNegativeForRisk ? "text-green-600" : "text-red-600"}>
                   {isNegativeForRisk ? "" : "+"}{(factor.impact * 100).toFixed(0)}%

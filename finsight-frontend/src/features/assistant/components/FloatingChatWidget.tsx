@@ -5,6 +5,7 @@ import { MessageCircle, X, Send, Bot, User, Loader2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { preguntarIA } from "@/features/assistant/services/assistantApi";
 import { useToast } from "@/shared/components/Toast";
+import { useLanguage } from "@/shared/context/LanguageContext";
 
 interface ChatMessage {
   id: string;
@@ -15,12 +16,8 @@ interface ChatMessage {
 const MESSAGES_KEY = "finsight_chat_messages";
 const OPEN_KEY = "finsight_chat_open";
 
-const WELCOME_MESSAGE: ChatMessage = {
-  id: "welcome",
-  role: "assistant",
-  content:
-    'Hola, soy tu asistente financiero. Preguntame sobre finanzas y contabilidad, o sobre como usar FinSight AI, por ejemplo: "que es el flujo de caja" o "como subo mis transacciones".',
-};
+// El contenido del mensaje de bienvenida se toma del idioma activo al renderizar.
+const WELCOME_MESSAGE: ChatMessage = { id: "welcome", role: "assistant", content: "" };
 
 function loadMessages(): ChatMessage[] {
   if (typeof window === "undefined") return [WELCOME_MESSAGE];
@@ -79,6 +76,7 @@ export default function FloatingChatWidget() {
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
   const showToast = useToast();
+  const { t } = useLanguage();
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -118,7 +116,7 @@ export default function FloatingChatWidget() {
       ]);
     } catch (err) {
       showToast(
-        err instanceof Error ? err.message : "No se pudo contactar al asistente.",
+        err instanceof Error ? err.message : t.chat.couldNotReach,
         "error"
       );
     } finally {
@@ -140,12 +138,12 @@ export default function FloatingChatWidget() {
           <div className="flex items-center justify-between border-b border-slate-200 bg-primary px-4 py-3">
             <div className="flex items-center gap-2 text-white">
               <Bot className="h-4 w-4" />
-              <span className="text-sm font-semibold">Asistente Financiero</span>
+              <span className="text-sm font-semibold">{t.chat.title}</span>
             </div>
             <button
               onClick={() => setIsOpen(false)}
               className="text-white/80 hover:text-white"
-              aria-label="Cerrar chat"
+              aria-label={t.chat.close}
             >
               <X className="h-4 w-4" />
             </button>
@@ -173,7 +171,7 @@ export default function FloatingChatWidget() {
                 >
                   {message.role === "assistant" ? (
                     <ReactMarkdown components={markdownComponents}>
-                      {message.content}
+                      {message.id === WELCOME_MESSAGE.id ? t.chat.welcome : message.content}
                     </ReactMarkdown>
                   ) : (
                     message.content
@@ -189,7 +187,7 @@ export default function FloatingChatWidget() {
                 </div>
                 <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-400">
                   <Loader2 className="h-3 w-3 animate-spin" />
-                  Pensando...
+                  {t.chat.thinking}
                 </div>
               </div>
             )}
@@ -203,7 +201,7 @@ export default function FloatingChatWidget() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               rows={1}
-              placeholder="Escribe tu pregunta..."
+              placeholder={t.chat.placeholder}
               className="flex-1 resize-none rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
             <button
@@ -220,7 +218,7 @@ export default function FloatingChatWidget() {
       <button
         onClick={() => setIsOpen((prev) => !prev)}
         className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg transition hover:bg-primary-dark"
-        aria-label="Abrir asistente financiero"
+        aria-label={t.chat.open}
       >
         {isOpen ? <X className="h-5 w-5" /> : <MessageCircle className="h-5 w-5" />}
       </button>

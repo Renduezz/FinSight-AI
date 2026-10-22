@@ -4,10 +4,13 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/shared/context/AuthContext";
 import { updateName, updateEmail } from "@/features/settings/services/settingsApi";
 import { useToast } from "@/shared/components/Toast";
+import { useLanguage } from "@/shared/context/LanguageContext";
 
 export default function ProfileSettingsForm() {
   const { user, refreshUser } = useAuth();
   const showToast = useToast();
+  const { t } = useLanguage();
+  const p = t.settings.profile;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -33,7 +36,7 @@ export default function ProfileSettingsForm() {
 
     try {
       if (emailChanged && !currentPassword) {
-        showToast("Enter your current password to change your email.", "error");
+        showToast(p.needPassword, "error");
         setIsSaving(false);
         return;
       }
@@ -47,9 +50,9 @@ export default function ProfileSettingsForm() {
 
       await refreshUser();
       setCurrentPassword("");
-      setSavedMessage("Profile updated successfully.");
+      setSavedMessage(p.updated);
     } catch (err) {
-      showToast(err instanceof Error ? err.message : "Could not update profile.", "error");
+      showToast(err instanceof Error ? err.message : p.couldNotUpdate, "error");
     } finally {
       setIsSaving(false);
     }
@@ -57,11 +60,11 @@ export default function ProfileSettingsForm() {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-md rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-      <p className="text-sm font-semibold text-slate-700">Profile information</p>
+      <p className="text-sm font-semibold text-slate-700">{p.title}</p>
 
       <div className="mt-4 space-y-4">
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-600">Full name</label>
+          <label className="mb-1 block text-xs font-medium text-slate-600">{p.fullName}</label>
           <input
             type="text"
             value={name}
@@ -70,7 +73,7 @@ export default function ProfileSettingsForm() {
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-600">Email address</label>
+          <label className="mb-1 block text-xs font-medium text-slate-600">{p.email}</label>
           <input
             type="email"
             value={email}
@@ -82,7 +85,7 @@ export default function ProfileSettingsForm() {
         {emailChanged && (
           <div>
             <label className="mb-1 block text-xs font-medium text-slate-600">
-              Current password <span className="text-slate-400">(required to change email)</span>
+              {p.currentPassword} <span className="text-slate-400">{p.requiredForEmail}</span>
             </label>
             <input
               type="password"
@@ -101,7 +104,7 @@ export default function ProfileSettingsForm() {
         disabled={isSaving || (!nameChanged && !emailChanged)}
         className="mt-4 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary-dark disabled:opacity-60"
       >
-        {isSaving ? "Saving..." : "Save changes"}
+        {isSaving ? t.common.saving : t.common.saveChanges}
       </button>
     </form>
   );

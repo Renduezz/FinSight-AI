@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, ReactNode, useCallback } from "react";
 import { AlertTriangle } from "lucide-react";
+import { useLanguage } from "@/shared/context/LanguageContext";
 
 interface ConfirmOptions {
   title: string;
@@ -20,6 +21,7 @@ const ConfirmContext = createContext<ConfirmFn | null>(null);
 
 export function ConfirmProvider({ children }: { children: ReactNode }) {
   const [pending, setPending] = useState<PendingConfirm | null>(null);
+  const { t } = useLanguage();
 
   // Devolvemos una función que crea una Promise: el código que la llama puede
   // hacer "await confirm(...)" y esperar a que el usuario haga clic en el modal,
@@ -59,7 +61,7 @@ export function ConfirmProvider({ children }: { children: ReactNode }) {
                 onClick={() => handleChoice(false)}
                 className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
               >
-                Cancel
+                {t.common.cancel}
               </button>
               <button
                 onClick={() => handleChoice(true)}
@@ -67,7 +69,7 @@ export function ConfirmProvider({ children }: { children: ReactNode }) {
                   pending.danger ? "bg-red-600 hover:bg-red-700" : "bg-primary hover:bg-primary-dark"
                 }`}
               >
-                {pending.confirmLabel ?? "Confirm"}
+                {pending.confirmLabel ?? t.common.confirm}
               </button>
             </div>
           </div>

@@ -4,16 +4,18 @@ import { useState } from "react";
 import DashboardLayout from "@/shared/components/DashboardLayout";
 import ProfileSettingsForm from "@/features/settings/components/ProfileSettingsForm";
 import SecuritySettingsForm from "@/features/settings/components/SecuritySettingsForm";
+import { useLanguage } from "@/shared/context/LanguageContext";
 
 type Tab = "profile" | "security";
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<Tab>("profile");
+  const { t } = useLanguage();
 
   return (
     <DashboardLayout>
-      <h1 className="text-2xl font-bold text-slate-900">Settings</h1>
-      <p className="mt-1 text-sm text-slate-500">Manage your profile and security preferences.</p>
+      <h1 className="text-2xl font-bold text-slate-900">{t.settings.title}</h1>
+      <p className="mt-1 text-sm text-slate-500">{t.settings.subtitle}</p>
 
       {/* Pestañas */}
       <div className="mt-6 flex gap-1 border-b border-slate-200">
@@ -25,7 +27,7 @@ export default function SettingsPage() {
               : "text-slate-500 hover:text-slate-700"
           }`}
         >
-          Profile
+          {t.settings.profileTab}
         </button>
         <button
           onClick={() => setActiveTab("security")}
@@ -35,7 +37,7 @@ export default function SettingsPage() {
               : "text-slate-500 hover:text-slate-700"
           }`}
         >
-          Security
+          {t.settings.securityTab}
         </button>
       </div>
 
