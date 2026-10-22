@@ -24,4 +24,8 @@ class Settings(BaseSettings):
     # Nivel de logging
     LOG_LEVEL: str = "INFO"
 
+    MIN_CLASS_RATIO: float = 0.05
+
+    ML_API_KEY: str = ""
+
 settings = Settings()

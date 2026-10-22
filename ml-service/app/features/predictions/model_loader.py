@@ -1,37 +1,30 @@
-
+#Imports necesarios para el archivo
 import joblib
 from pathlib import Path
 from app.core.config import settings
 from app.core.exceptions import ModelNotFoundError
 
-# Cache en memoria: { "1": <modelo cargado>, "2": <modelo cargado>, ... }
-# Es un simple diccionario de proceso; si en el futuro se despliegan
-# múltiples instancias del ML Service, considera un cache compartido
-# (ej. Redis) en vez de este diccionario local.
 _model_cache: dict[str, object] = {}
 
-
+#funcion para verificar si el modelo existe,
 def _resolve_model_path(company_id: int) -> Path:
-
     company_specific_path = settings.MODELS_DIR / f"{company_id}.pkl"
     if company_specific_path.exists():
-        return company_specific_path
+        return  company_specific_path
 
-    # Fallback: si la empresa es nueva y aún no tiene modelo propio
-    # entrenado con SU historial, se usa un modelo genérico entrenado
-    # con datos agregados de varias PYMEs (útil para el "cold start").
     default_path = settings.MODELS_DIR / settings.DEFAULT_MODEL_NAME
     if default_path.exists():
-        return default_path
+        return  default_path
 
-    raise ModelNotFoundError(
-        f"No existe modelo específico para la empresa {company_id} "
-        f"ni un modelo default en {settings.MODELS_DIR}"
-    )
+    raise ModelNotFoundError(f"No existe modelo para la empresa {company_id}")
 
-
+  
 def load_model(company_id: int):
-
+    """
+    Punto de entrada público de este módulo.
+    Devuelve el objeto del modelo ya deserializado (listo para usar
+    con .predict_proba(...) en service.py).
+    """
     cache_key = str(company_id)
 
     if cache_key in _model_cache:
@@ -46,3 +39,9 @@ def load_model(company_id: int):
 
     _model_cache[cache_key] = model
     return model
+
+def invalidate_cache(company_id: int | None = None) -> None:
+    if company_id is not None:
+        _model_cache.pop(str(company_id), None)
+    else:
+        _model_cache.clear()

@@ -19,8 +19,11 @@ class InvalidTransactionDataError(MLServiceError):
 
 #error 500 - indicaquehy una falla con el servidor
 class PredictionError(MLServiceError):
-    pass
+    pass   
 
+
+class UnauthorizedError(MLServiceError):
+    pass
 
 
 # Handlers: funciones que FastAPI ejecuta automáticamente cuando una excepción de estos tipos "escapa" de un endpoint sin ser capturada.
@@ -44,4 +47,14 @@ async def prediction_error_handler(request: Request, exc: PredictionError):
     return JSONResponse(
         status_code=500,
         content={"error": "PREDICTION_FAILED", "message": exc.message},
+    )
+
+
+class UnauthorizedError(MLServiceError):
+    pass
+
+async def unauthorized_handler(request: Request, exc: UnauthorizedError):
+    return JSONResponse(
+        status_code=401,
+        content={"error": "INVALID_CREDENTIALS", "message": exc.message},
     )
