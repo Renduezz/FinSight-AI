@@ -28,9 +28,6 @@ export default function PredictionsPage() {
       const result = await runAnalysis(activeCompany.id);
       setRealResult(result);
     } catch (err) {
-      // Esperado por ahora: el microservicio de Python todavía no existe.
-      // Guardamos el motivo para mostrarlo con honestidad, y seguimos
-      // usando el heurístico local como respaldo.
       setRealResult(null);
       setServiceError(err instanceof Error ? err.message : "The analysis service is not available.");
     } finally {
@@ -39,6 +36,15 @@ export default function PredictionsPage() {
   }
 
   const displayScore = realResult?.riskScore ?? riskHeuristic.score;
+
+  const projectedAmount =
+    realResult?.cashflowProjection != null
+      ? `$${Math.round(realResult.cashflowProjection).toLocaleString()}`
+      : `$${Math.round(riskHeuristic.projectedCashflow).toLocaleString()}`;
+
+  const projectedPeriod = realResult
+    ? `Next period (estimated) — model ${realResult.modelVersion ?? "n/a"}`
+    : "Next period (estimated)";
 
   return (
     <DashboardLayout>
@@ -70,7 +76,8 @@ export default function PredictionsPage() {
         <>
           {realResult ? (
             <div className="mt-3 rounded-lg border border-green-200 bg-green-50 px-4 py-2 text-xs text-green-700">
-              Live result from the Machine Learning service.
+              Live result from the Machine Learning service
+              {realResult.riskLevel ? ` — risk level: ${realResult.riskLevel}` : ""}.
             </div>
           ) : (
             <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-700">
@@ -83,8 +90,8 @@ export default function PredictionsPage() {
           <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
             <RiskGauge riskScore={displayScore} />
             <CashflowForecastCard
-              projectedAmount={`$${Math.round(riskHeuristic.projectedCashflow).toLocaleString()}`}
-              period="Next period (estimated)"
+              projectedAmount={projectedAmount}
+              period={projectedPeriod}
             />
           </div>
 
