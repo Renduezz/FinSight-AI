@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finsight.finsight_api.common.ApiException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -13,10 +12,11 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-@RequiredArgsConstructor
 public class PredictionMapper {
 
-    private final ObjectMapper objectMapper;
+    // Instancia propia: no depende de que Spring tenga un bean de ObjectMapper
+    // configurado en el contexto (esta app no lo expone por defecto).
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public PredictionDto toDto(Prediction prediction) {
         List<ShapFactorDto> factors = shapFromJson(prediction.getShapExplanation());
