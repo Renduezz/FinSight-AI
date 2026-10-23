@@ -1,0 +1,1305 @@
+{
+  "company_id": null,
+  "samples": [
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 5000000,
+          "transaction_date": "2026-01-01",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 1500000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 150000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 5090000,
+          "transaction_date": "2026-01-02",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 1525000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 152500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 5180000,
+          "transaction_date": "2026-01-03",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 1550000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 155000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 5270000,
+          "transaction_date": "2026-01-04",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 1575000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 157500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 5360000,
+          "transaction_date": "2026-01-05",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 1600000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 160000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 5450000,
+          "transaction_date": "2026-01-01",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 1625000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 162500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 5540000,
+          "transaction_date": "2026-01-02",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 1650000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 165000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 5630000,
+          "transaction_date": "2026-01-03",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 1675000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 167500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 5720000,
+          "transaction_date": "2026-01-04",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 1700000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 170000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 5810000,
+          "transaction_date": "2026-01-05",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 1725000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 172500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 5900000,
+          "transaction_date": "2026-01-01",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 1750000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 175000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 5990000,
+          "transaction_date": "2026-01-02",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 1775000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 177500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 6080000,
+          "transaction_date": "2026-01-03",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 1800000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 180000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 6170000,
+          "transaction_date": "2026-01-04",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 1825000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 182500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 6260000,
+          "transaction_date": "2026-01-05",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 1850000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 185000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 6350000,
+          "transaction_date": "2026-01-01",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 1875000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 187500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 6440000,
+          "transaction_date": "2026-01-02",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 1900000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 190000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 6530000,
+          "transaction_date": "2026-01-03",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 1925000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 192500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 6620000,
+          "transaction_date": "2026-01-04",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 1950000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 195000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 6710000,
+          "transaction_date": "2026-01-05",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 1975000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 197500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 6800000,
+          "transaction_date": "2026-01-01",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 2000000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 200000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 6890000,
+          "transaction_date": "2026-01-02",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 2025000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 202500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 6980000,
+          "transaction_date": "2026-01-03",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 2050000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 205000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 7070000,
+          "transaction_date": "2026-01-04",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 2075000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 207500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 0,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 7160000,
+          "transaction_date": "2026-01-05",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 2100000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 210000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 2500000,
+          "transaction_date": "2026-01-01",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4000000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 400000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 2530000,
+          "transaction_date": "2026-01-02",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4045000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 404500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 2560000,
+          "transaction_date": "2026-01-03",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4090000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 409000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 2590000,
+          "transaction_date": "2026-01-04",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4135000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 413500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 2620000,
+          "transaction_date": "2026-01-05",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4180000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 418000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 2650000,
+          "transaction_date": "2026-01-01",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4225000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 422500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 2680000,
+          "transaction_date": "2026-01-02",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4270000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 427000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 2710000,
+          "transaction_date": "2026-01-03",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4315000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 431500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 2740000,
+          "transaction_date": "2026-01-04",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4360000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 436000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 2770000,
+          "transaction_date": "2026-01-05",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4405000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 440500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 2800000,
+          "transaction_date": "2026-01-01",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4450000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 445000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 2830000,
+          "transaction_date": "2026-01-02",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4495000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 449500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 2860000,
+          "transaction_date": "2026-01-03",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4540000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 454000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 2890000,
+          "transaction_date": "2026-01-04",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4585000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 458500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 2920000,
+          "transaction_date": "2026-01-05",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4630000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 463000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 2950000,
+          "transaction_date": "2026-01-01",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4675000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 467500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 2980000,
+          "transaction_date": "2026-01-02",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4720000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 472000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 3010000,
+          "transaction_date": "2026-01-03",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4765000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 476500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 3040000,
+          "transaction_date": "2026-01-04",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4810000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 481000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 3070000,
+          "transaction_date": "2026-01-05",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4855000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 485500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 3100000,
+          "transaction_date": "2026-01-01",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4900000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 490000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 3130000,
+          "transaction_date": "2026-01-02",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4945000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 494500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 3160000,
+          "transaction_date": "2026-01-03",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 4990000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 499000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 3190000,
+          "transaction_date": "2026-01-04",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 5035000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 503500,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    },
+    {
+      "label": 1,
+      "transactions": [
+        {
+          "type": "INCOME",
+          "category": "Ventas",
+          "amount": 3220000,
+          "transaction_date": "2026-01-05",
+          "description": "Venta del periodo"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Nomina",
+          "amount": 5080000,
+          "transaction_date": "2026-01-10",
+          "description": "Pago de nomina"
+        },
+        {
+          "type": "EXPENSE",
+          "category": "Servicios",
+          "amount": 508000,
+          "transaction_date": "2026-01-15",
+          "description": "Servicios publicos"
+        }
+      ]
+    }
+  ]
+}

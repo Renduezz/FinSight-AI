@@ -7,11 +7,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app ./app
 COPY scripts ./scripts
+COPY data ./data
 
-# Genera el modelo de prueba durante la construcción de la imagen, ya que
-# Render no conserva archivos entre despliegues (almacenamiento efímero) —
-# así el modelo siempre existe cuando el contenedor arranca.
-RUN python scripts/create_dummy_model.py
+# Genera el modelo por defecto durante la construccion de la imagen, ya que
+# Render no conserva archivos entre despliegues (almacenamiento efimero) -
+# asi el modelo siempre existe cuando el contenedor arranca. Se entrena con
+# los datos sinteticos preparados para el modelo por defecto, usando el mismo
+# pipeline que el endpoint /training/train.
+RUN python scripts/train_default_model.py
 
 EXPOSE 8000
 
