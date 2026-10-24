@@ -118,7 +118,7 @@ export default function PredictionsPage() {
           )}
 
           <div className="mt-6">
-            <PredictionsHistoryTable companyId={activeCompany?.id ?? null} />
+            <PredictionsHistoryTable companyId={activeCompany?.id ?? null} refreshKey={realResult?.id ?? null} />
           </div>
         </>
       )}
