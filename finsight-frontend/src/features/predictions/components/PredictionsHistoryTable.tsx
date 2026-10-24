@@ -6,9 +6,11 @@ import { getPredictionHistory, MlAnalysisResult } from "@/features/predictions/s
 
 interface PredictionsHistoryTableProps {
   companyId: number | null;
+  // Cambia cada vez que se genera una predicción nueva, para volver a pedir el historial.
+  refreshKey?: number | null;
 }
 
-export default function PredictionsHistoryTable({ companyId }: PredictionsHistoryTableProps) {
+export default function PredictionsHistoryTable({ companyId, refreshKey }: PredictionsHistoryTableProps) {
   const { t, language } = useLanguage();
   const [history, setHistory] = useState<MlAnalysisResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -36,7 +38,7 @@ export default function PredictionsHistoryTable({ companyId }: PredictionsHistor
     return () => {
       cancelled = true;
     };
-  }, [companyId]);
+  }, [companyId, refreshKey]);
 
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
