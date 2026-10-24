@@ -54,6 +54,10 @@ public class PredictionServiceImpl implements PredictionService {
                 .shapExplanation(predictionMapper.shapToJson(ml.shapExplanation()))
                 .modelVersion(ml.modelVersion())
                 .predictionDate(LocalDateTime.now())
+                .trend(ml.trend())
+                .projectedCashflow30d(ml.projectedCashflow30d())
+                .projectedCashflow90d(ml.projectedCashflow90d())
+                .estimatedDaysToDepletion(ml.estimatedDaysToDepletion())
                 .build();
 
         return predictionMapper.toDto(predictionRepository.save(prediction));
@@ -77,6 +81,15 @@ public class PredictionServiceImpl implements PredictionService {
                 .map(predictionMapper::toDto)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
                         "Prediction " + predictionId + " not found for company " + companyId));
+    }
+
+    @Override
+    public List<PredictionDto> history(Long companyId) {
+        findOwnedCompany(companyId, currentUser());
+
+        return predictionRepository.findTop10ByCompanyIdOrderByPredictionDateDesc(companyId).stream()
+                .map(predictionMapper::toDto)
+                .toList();
     }
 
     // ---------------------------------------------------------------- helpers
