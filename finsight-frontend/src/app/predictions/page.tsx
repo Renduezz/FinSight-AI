@@ -97,8 +97,27 @@ export default function PredictionsPage() {
             />
           </div>
 
+          {realResult?.trend && (
+            <div className="mt-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+              <p className="text-sm font-semibold text-slate-700">
+                {t.predictions.trendLabel[realResult.trend] ?? realResult.trend}
+              </p>
+              <p className="mt-2 text-sm text-slate-600">
+                {realResult.trend === "worsening" && realResult.estimatedDaysToDepletion === 0
+                  ? t.predictions.trendWorseningNegative
+                  : realResult.trend === "worsening" && realResult.estimatedDaysToDepletion != null
+                  ? t.predictions.trendWorsening(realResult.estimatedDaysToDepletion)
+                  : realResult.trend === "improving" && realResult.projectedCashflow90d != null
+                  ? t.predictions.trendImproving(
+                      `$${Math.round(realResult.projectedCashflow90d).toLocaleString()}`,
+                    )
+                  : t.predictions.trendStable}
+              </p>
+            </div>
+          )}
+
           <div className="mt-6">
-            <PredictionsHistoryTable />
+            <PredictionsHistoryTable companyId={activeCompany?.id ?? null} />
           </div>
         </>
       )}
