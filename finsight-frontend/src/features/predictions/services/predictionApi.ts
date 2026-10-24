@@ -17,6 +17,12 @@ export interface MlAnalysisResult {
   generatedAlerts: string[];
   modelVersion: string | null;
   predictionDate: string;
+  // Tendencia real calculada a partir de la trayectoria de las transacciones
+  // en el tiempo (no del agregado estático), con proyección a 30/90 días.
+  trend: "improving" | "worsening" | "stable" | null;
+  projectedCashflow30d: number | null;
+  projectedCashflow90d: number | null;
+  estimatedDaysToDepletion: number | null;
 }
 
 // Generates a new prediction: the backend reads the company's transactions,
@@ -40,4 +46,11 @@ export function getPredictionShap(companyId: number, predictionId: number) {
     `/predictions/shap/${companyId}/${predictionId}`,
     { method: "GET" },
   );
+}
+
+// Up to the 10 most recent predictions of the company, most recent first.
+export function getPredictionHistory(companyId: number) {
+  return apiFetch<MlAnalysisResult[]>(`/predictions/history/${companyId}`, {
+    method: "GET",
+  });
 }
