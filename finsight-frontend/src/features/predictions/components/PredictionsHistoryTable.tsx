@@ -1,45 +1,77 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useLanguage } from "@/shared/context/LanguageContext";
+import { getPredictionHistory, MlAnalysisResult } from "@/features/predictions/services/predictionApi";
 
-interface PredictionRecord {
-  date: string;
-  modelVersion: string;
-  riskScore: number;
+interface PredictionsHistoryTableProps {
+  companyId: number | null;
 }
 
-// Placeholder: en el futuro vendrá de GET /companies/{id}/predictions/latest y su historial
-const MOCK_HISTORY: PredictionRecord[] = [
-  { date: "Sep 28, 2026", modelVersion: "v1.2", riskScore: 0.42 },
-  { date: "Aug 30, 2026", modelVersion: "v1.1", riskScore: 0.38 },
-  { date: "Jul 31, 2026", modelVersion: "v1.1", riskScore: 0.51 },
-];
+export default function PredictionsHistoryTable({ companyId }: PredictionsHistoryTableProps) {
+  const { t, language } = useLanguage();
+  const [history, setHistory] = useState<MlAnalysisResult[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-export default function PredictionsHistoryTable() {
-  const { t } = useLanguage();
+  useEffect(() => {
+    if (!companyId) {
+      setHistory([]);
+      return;
+    }
+
+    let cancelled = false;
+    setIsLoading(true);
+
+    getPredictionHistory(companyId)
+      .then((data) => {
+        if (!cancelled) setHistory(data);
+      })
+      .catch(() => {
+        if (!cancelled) setHistory([]);
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [companyId]);
 
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
       <p className="text-sm font-semibold text-slate-700">{t.predictions.previous}</p>
 
-      <table className="mt-4 w-full text-left text-sm">
-        <thead>
-          <tr className="border-b border-slate-100 text-xs uppercase text-slate-400">
-            <th className="pb-2 font-medium">{t.common.date}</th>
-            <th className="pb-2 font-medium">{t.predictions.model}</th>
-            <th className="pb-2 font-medium">{t.predictions.riskScore}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {MOCK_HISTORY.map((record, i) => (
-            <tr key={i} className="border-b border-slate-50 last:border-0">
-              <td className="py-3 text-slate-700">{record.date}</td>
-              <td className="py-3 text-slate-500">{record.modelVersion}</td>
-              <td className="py-3 text-slate-500">{Math.round(record.riskScore * 100)}%</td>
+      {isLoading ? (
+        <p className="mt-4 text-sm text-slate-400">{t.insights.loading}</p>
+      ) : history.length === 0 ? (
+        <p className="mt-4 text-sm text-slate-400">{t.predictions.noHistory}</p>
+      ) : (
+        <table className="mt-4 w-full text-left text-sm">
+          <thead>
+            <tr className="border-b border-slate-100 text-xs uppercase text-slate-400">
+              <th className="pb-2 font-medium">{t.common.date}</th>
+              <th className="pb-2 font-medium">{t.predictions.model}</th>
+              <th className="pb-2 font-medium">{t.predictions.riskScore}</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {history.map((record) => (
+              <tr key={record.id} className="border-b border-slate-50 last:border-0">
+                <td className="py-3 text-slate-700">
+                  {new Date(record.predictionDate).toLocaleDateString(language === "es" ? "es-ES" : "en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </td>
+                <td className="py-3 text-slate-500">{record.modelVersion ?? "—"}</td>
+                <td className="py-3 text-slate-500">{Math.round(record.riskScore * 100)}%</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
