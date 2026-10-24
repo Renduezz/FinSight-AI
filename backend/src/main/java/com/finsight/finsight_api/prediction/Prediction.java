@@ -53,6 +53,20 @@ public class Prediction {
     @Column(name = "model_version", length = 50)
     private String modelVersion;
 
+    /** "improving" | "worsening" | "stable", calculado a partir de la trayectoria real de las transacciones. */
+    @Column(name = "trend", length = 20)
+    private String trend;
+
+    @Column(name = "projected_cashflow_30d", precision = 15, scale = 2)
+    private BigDecimal projectedCashflow30d;
+
+    @Column(name = "projected_cashflow_90d", precision = 15, scale = 2)
+    private BigDecimal projectedCashflow90d;
+
+    /** Nulo si la tendencia no es negativa (no hay fecha de quiebre que proyectar). */
+    @Column(name = "estimated_days_to_depletion")
+    private Integer estimatedDaysToDepletion;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
