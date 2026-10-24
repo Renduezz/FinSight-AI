@@ -74,4 +74,74 @@ def build_feature_vector(transactions: list[TransactionItem]) -> pd.DataFrame:
 
     
       return pd.DataFrame([feature_row], columns=FEATURE_NAMES)
-      
+
+
+# Umbral mínimo (en valor absoluto) para considerar que el balance cambia
+# "por día" de forma relevante. Por debajo de esto se reporta como "stable"
+# en vez de un falso positivo de mejora/deterioro causado por ruido.
+MIN_DAILY_SLOPE_FOR_TREND = 1.0
+
+
+def compute_trend_projection(transactions: list[TransactionItem]) -> dict:
+    """
+    A diferencia de build_feature_vector (que resume TODO el periodo en una
+    sola foto), esto mira la serie temporal real: balance acumulado día a
+    día, y le ajusta una recta (regresión lineal simple) para poder
+    proyectar hacia adelante. Así es como el análisis deja de ser estático
+    y responde de verdad a la trayectoria de cada empresa:
+      - si la pendiente es positiva: la empresa va mejorando -> proyección a 30/90 días.
+      - si es negativa: va empeorando -> se estima en cuántos días se queda sin fondos.
+      - si es ~0: el balance se mantiene estable.
+    """
+    df = transactions_to_dataframe(transactions)
+
+    df["signed_amount"] = np.where(
+        df["type"] == TransactionType.INCOME.value, df["amount"], -df["amount"]
+    )
+
+    daily = df.groupby("transaction_date")["signed_amount"].sum().sort_index()
+    cumulative_balance = daily.cumsum()
+
+    current_balance = float(cumulative_balance.iloc[-1])
+
+    if len(cumulative_balance) < 2:
+        # Solo hay movimientos en una fecha: no hay suficiente historia
+        # para estimar una tendencia real, así que no inventamos una.
+        return {
+            "trend": "stable",
+            "projected_cashflow_30d": round(current_balance, 2),
+            "projected_cashflow_90d": round(current_balance, 2),
+            "estimated_days_to_depletion": None,
+        }
+
+    first_day = cumulative_balance.index.min()
+    days_elapsed = (cumulative_balance.index - first_day).days.to_numpy(dtype=float)
+    balances = cumulative_balance.to_numpy(dtype=float)
+
+    # Pendiente = cuánto cambia el balance acumulado, en promedio, por día.
+    slope_per_day, _intercept = np.polyfit(days_elapsed, balances, 1)
+
+    if abs(slope_per_day) < MIN_DAILY_SLOPE_FOR_TREND:
+        trend = "stable"
+    elif slope_per_day > 0:
+        trend = "improving"
+    else:
+        trend = "worsening"
+
+    projected_30d = current_balance + slope_per_day * 30
+    projected_90d = current_balance + slope_per_day * 90
+
+    estimated_days_to_depletion = None
+    if trend == "worsening" and current_balance > 0:
+        estimated_days_to_depletion = int(current_balance / (-slope_per_day))
+    elif trend == "worsening" and current_balance <= 0:
+        # Ya está en terreno negativo con tendencia a seguir empeorando.
+        estimated_days_to_depletion = 0
+
+    return {
+        "trend": trend,
+        "projected_cashflow_30d": round(float(projected_30d), 2),
+        "projected_cashflow_90d": round(float(projected_90d), 2),
+        "estimated_days_to_depletion": estimated_days_to_depletion,
+    }
+
