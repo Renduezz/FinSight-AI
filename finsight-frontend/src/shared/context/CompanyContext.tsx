@@ -9,6 +9,7 @@ import {
   Company,
   CreateCompanyPayload,
 } from "@/features/companies/services/companyApi";
+import { useAuth } from "@/shared/context/AuthContext";
 
 interface CompanyContextValue {
   companies: Company[];
@@ -25,6 +26,7 @@ interface CompanyContextValue {
 const CompanyContext = createContext<CompanyContextValue | null>(null);
 
 export function CompanyProvider({ children }: { children: ReactNode }) {
+  const { user } = useAuth();
   const [companies, setCompanies] = useState<Company[]>([]);
   const [activeCompanyId, setActiveCompanyId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,10 +51,17 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
     }
   }, [activeCompanyId]);
 
+  // Las empresas dependen de quién inició sesión: al entrar (o cambiar de
+  // usuario) se vuelven a pedir al backend; al salir se limpian.
   useEffect(() => {
-    refreshCompanies();
+    if (user) {
+      refreshCompanies();
+    } else {
+      setCompanies([]);
+      setActiveCompanyId(null);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user?.id]);
 
   async function addCompany(payload: CreateCompanyPayload) {
     const newCompany = await createCompany(payload);
