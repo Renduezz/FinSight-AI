@@ -39,10 +39,11 @@ export default function PredictionsPage() {
 
   const displayScore = realResult?.riskScore ?? riskHeuristic.score;
 
-  const projectedAmount =
-    realResult?.cashflowProjection != null
-      ? `$${Math.round(realResult.cashflowProjection).toLocaleString()}`
-      : `$${Math.round(riskHeuristic.projectedCashflow).toLocaleString()}`;
+  // Preferimos la proyección a 30 días calculada con la tendencia real; si no
+  // viene, caemos al valor que devuelve el modelo, y por último al heurístico local.
+  const projectedValue =
+    realResult?.projectedCashflow30d ?? realResult?.cashflowProjection ?? riskHeuristic.projectedCashflow;
+  const projectedAmount = `$${Math.round(projectedValue).toLocaleString()}`;
 
   const projectedPeriod = realResult
     ? t.predictions.nextPeriodModel(realResult.modelVersion ?? "n/a")
