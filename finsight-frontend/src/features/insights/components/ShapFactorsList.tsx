@@ -27,6 +27,10 @@ export default function ShapFactorsList({ factors }: ShapFactorsListProps) {
   // Para dibujar las barras proporcionalmente, usamos el impacto más grande
   // (en valor absoluto) como referencia del 100% de ancho.
   const maxImpact = Math.max(...factors.map((f) => Math.abs(f.impact)), 0.0001);
+  // Los valores SHAP del modelo están en escala log-odds (p. ej. -4.95), no en
+  // porcentajes. Para mostrarlos con sentido, cada factor se expresa como su
+  // parte del peso total de los factores mostrados.
+  const totalImpact = factors.reduce((sum, f) => sum + Math.abs(f.impact), 0) || 1;
 
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -55,7 +59,7 @@ export default function ShapFactorsList({ factors }: ShapFactorsListProps) {
                   {label}
                 </span>
                 <span className={isNegativeForRisk ? "text-green-600" : "text-red-600"}>
-                  {isNegativeForRisk ? "" : "+"}{(factor.impact * 100).toFixed(0)}%
+                  {isNegativeForRisk ? "-" : "+"}{((Math.abs(factor.impact) / totalImpact) * 100).toFixed(0)}%
                 </span>
               </div>
               <div className="h-2 w-full rounded-full bg-slate-100">
