@@ -34,7 +34,11 @@ public class PredictionMapper {
                 shapValues,
                 List.of(),
                 prediction.getModelVersion(),
-                prediction.getPredictionDate());
+                prediction.getPredictionDate(),
+                prediction.getTrend(),
+                prediction.getProjectedCashflow30d(),
+                prediction.getProjectedCashflow90d(),
+                prediction.getEstimatedDaysToDepletion());
     }
 
     public String shapToJson(List<ShapFactorDto> factors) {
