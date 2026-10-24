@@ -26,4 +26,9 @@ public class PredictionController {
     public ResponseEntity<PredictionDto> shap(@PathVariable Long companyId, @PathVariable Long predictionId) {
         return ResponseEntity.ok(predictionService.shap(companyId, predictionId));
     }
+
+    @GetMapping("/history/{companyId}")
+    public ResponseEntity<java.util.List<PredictionDto>> history(@PathVariable Long companyId) {
+        return ResponseEntity.ok(predictionService.history(companyId));
+    }
 }
