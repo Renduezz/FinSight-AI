@@ -2,27 +2,31 @@
 
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { useLanguage } from "@/shared/context/LanguageContext";
-import type { Translations } from "@/shared/i18n/translations";
+import type { ShapFactor } from "@/features/predictions/services/predictionApi";
 
-interface ShapFactor {
-  variable: keyof Translations["insights"]["factors"];
-  impact: number; // positivo = aumenta el riesgo, negativo = lo reduce
+interface ShapFactorsListProps {
+  factors: ShapFactor[];
 }
 
-// Placeholder: en el futuro vendrá de GET /companies/{id}/predictions/{id}/shap
-const MOCK_FACTORS: ShapFactor[] = [
-  { variable: "irregularCashflow", impact: 0.18 },
-  { variable: "payrollConcentration", impact: 0.12 },
-  { variable: "decliningSales", impact: 0.08 },
-  { variable: "consistentIncome", impact: -0.14 },
-  { variable: "lowClientReliance", impact: -0.07 },
-];
-
-export default function ShapFactorsList() {
+// Los nombres de las columnas vienen tal cual del modelo (snake_case, en
+// inglés). Si alguna vez aparece una columna que no está traducida, mostramos
+// el nombre crudo en vez de romper la pantalla.
+export default function ShapFactorsList({ factors }: ShapFactorsListProps) {
   const { t } = useLanguage();
+
+  if (factors.length === 0) {
+    return (
+      <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <p className="text-sm font-semibold text-slate-700">{t.insights.shapTitle}</p>
+        <p className="mt-1 text-xs text-slate-400">{t.insights.shapSubtitle}</p>
+        <p className="mt-5 text-sm text-slate-400">{t.insights.noPrediction}</p>
+      </div>
+    );
+  }
+
   // Para dibujar las barras proporcionalmente, usamos el impacto más grande
   // (en valor absoluto) como referencia del 100% de ancho.
-  const maxImpact = Math.max(...MOCK_FACTORS.map((f) => Math.abs(f.impact)));
+  const maxImpact = Math.max(...factors.map((f) => Math.abs(f.impact)), 0.0001);
 
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -34,12 +38,13 @@ export default function ShapFactorsList() {
       </p>
 
       <div className="mt-5 space-y-4">
-        {MOCK_FACTORS.map((factor) => {
+        {factors.map((factor) => {
           const isNegativeForRisk = factor.impact < 0;
           const widthPercent = (Math.abs(factor.impact) / maxImpact) * 100;
+          const label = t.insights.factors[factor.feature] ?? factor.feature;
 
           return (
-            <div key={factor.variable}>
+            <div key={factor.feature}>
               <div className="mb-1 flex items-center justify-between text-sm">
                 <span className="flex items-center gap-1.5 text-slate-700">
                   {isNegativeForRisk ? (
@@ -47,7 +52,7 @@ export default function ShapFactorsList() {
                   ) : (
                     <TrendingUp className="h-4 w-4 text-red-600" />
                   )}
-                  {t.insights.factors[factor.variable]}
+                  {label}
                 </span>
                 <span className={isNegativeForRisk ? "text-green-600" : "text-red-600"}>
                   {isNegativeForRisk ? "" : "+"}{(factor.impact * 100).toFixed(0)}%
