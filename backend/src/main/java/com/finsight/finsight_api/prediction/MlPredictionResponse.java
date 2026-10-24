@@ -12,6 +12,10 @@ public record MlPredictionResponse(
         @JsonProperty("risk_level") String riskLevel,
         @JsonProperty("cashflow_projection") BigDecimal cashflowProjection,
         @JsonProperty("shap_explanation") List<ShapFactorDto> shapExplanation,
-        @JsonProperty("model_version") String modelVersion
+        @JsonProperty("model_version") String modelVersion,
+        @JsonProperty("trend") String trend,
+        @JsonProperty("projected_cashflow_30d") BigDecimal projectedCashflow30d,
+        @JsonProperty("projected_cashflow_90d") BigDecimal projectedCashflow90d,
+        @JsonProperty("estimated_days_to_depletion") Integer estimatedDaysToDepletion
 ) {
 }
