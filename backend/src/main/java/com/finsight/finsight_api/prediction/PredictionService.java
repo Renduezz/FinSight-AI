@@ -10,4 +10,7 @@ public interface PredictionService {
 
     /** A stored prediction with its SHAP explanation. */
     PredictionDto shap(Long companyId, Long predictionId);
+
+    /** Up to the 10 most recent predictions of the company, most recent first. */
+    java.util.List<PredictionDto> history(Long companyId);
 }
