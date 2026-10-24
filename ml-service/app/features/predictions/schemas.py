@@ -37,6 +37,13 @@ class PredictionResponse(BaseModel):
     risk_level: str
     cashflow_projection: float
     shap_explanation: list[ShapFactor]
-    model_version: str 
+    model_version: str
+    # Proyección real basada en la trayectoria de las transacciones a lo
+    # largo del tiempo (no en el agregado estático). Opcionales porque,
+    # en teoría, podrían no calcularse si llega una sola transacción.
+    trend: str | None = None
+    projected_cashflow_30d: float | None = None
+    projected_cashflow_90d: float | None = None
+    estimated_days_to_depletion: int | None = None
 
 

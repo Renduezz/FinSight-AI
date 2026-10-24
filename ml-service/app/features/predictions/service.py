@@ -3,7 +3,7 @@ from app.core.exceptions import PredictionError
 from app.features.predictions.schemas import PredictionRequest, PredictionResponse
 from app.features.predictions.model_loader import load_model
 from app.features.predictions.shap_service import explain_prediction
-from app.utils.preprocessing import build_feature_vector
+from app.utils.preprocessing import build_feature_vector, compute_trend_projection
 
 
   
@@ -19,13 +19,6 @@ def _score_to_risk_level(score: float) -> str:
 def _estimate_cashflow_projection(feature_row) -> float:
     net_cashflow = feature_row["net_cashflow"].iloc[0]
     return float(net_cashflow)
-
-def generate_prediction(request: PredictionRequest) -> PredictionResponse:
-    feature_row = build_feature_vector(request.transactions)
-    model = load_model(request.company_id)
-    risk_score = float(model.predict_proba(feature_row)[0][1])
-
-
 
 def generate_prediction(request: PredictionRequest) -> PredictionResponse:
     """
@@ -45,6 +38,7 @@ def generate_prediction(request: PredictionRequest) -> PredictionResponse:
 
     shap_factors = explain_prediction(model, feature_row)
     cashflow_projection = _estimate_cashflow_projection(feature_row)
+    trend_projection = compute_trend_projection(request.transactions)
 
     return PredictionResponse(
         company_id=request.company_id,
@@ -53,6 +47,10 @@ def generate_prediction(request: PredictionRequest) -> PredictionResponse:
         cashflow_projection=round(cashflow_projection, 2),
         shap_explanation=shap_factors,
         model_version=f"gb_v1_company_{request.company_id}",
+        trend=trend_projection["trend"],
+        projected_cashflow_30d=trend_projection["projected_cashflow_30d"],
+        projected_cashflow_90d=trend_projection["projected_cashflow_90d"],
+        estimated_days_to_depletion=trend_projection["estimated_days_to_depletion"],
     )
 
 
