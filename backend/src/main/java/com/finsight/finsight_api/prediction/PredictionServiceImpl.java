@@ -33,18 +33,25 @@ public class PredictionServiceImpl implements PredictionService {
     private final PredictionMapper predictionMapper;
 
     @Override
-    public PredictionDto generate(Long companyId) {
+    public PredictionDto generate(Long companyId, PredictionGenerateRequest body) {
         User user = currentUser();
         Company company = findOwnedCompany(companyId, user);
 
-        List<Transaction> transactions =
-                transactionRepository.findByCompanyIdAndCompanyUserId(companyId, user.getId());
-        if (transactions.isEmpty()) {
-            throw new ApiException(HttpStatus.BAD_REQUEST,
-                    "Company " + companyId + " has no transactions. Upload a CSV first.");
+        MlPredictionRequest mlRequest;
+        if (body != null && body.transactions() != null && !body.transactions().isEmpty()) {
+            // Only the files the user selected.
+            mlRequest = toMlRequest(companyId, body);
+        } else {
+            List<Transaction> transactions =
+                    transactionRepository.findByCompanyIdAndCompanyUserId(companyId, user.getId());
+            if (transactions.isEmpty()) {
+                throw new ApiException(HttpStatus.BAD_REQUEST,
+                        "Company " + companyId + " has no transactions. Upload a CSV first.");
+            }
+            mlRequest = toMlRequest(companyId, transactions);
         }
 
-        MlPredictionResponse ml = callMlService(toMlRequest(companyId, transactions));
+        MlPredictionResponse ml = callMlService(mlRequest);
 
         Prediction prediction = Prediction.builder()
                 .company(company)
@@ -102,6 +109,18 @@ public class PredictionServiceImpl implements PredictionService {
         return companyRepository.findByIdAndUserIdAndActiveTrue(companyId, user.getId())
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
                         "Company " + companyId + " does not exist or does not belong to the current user"));
+    }
+
+    private MlPredictionRequest toMlRequest(Long companyId, PredictionGenerateRequest body) {
+        List<MlPredictionRequest.MlTransaction> items = body.transactions().stream()
+                .map(t -> new MlPredictionRequest.MlTransaction(
+                        t.type(),
+                        t.category(),
+                        t.amount(),
+                        t.date(),
+                        null))
+                .toList();
+        return new MlPredictionRequest(companyId, items);
     }
 
     private MlPredictionRequest toMlRequest(Long companyId, List<Transaction> transactions) {
