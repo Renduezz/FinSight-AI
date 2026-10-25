@@ -79,6 +79,30 @@ interface TransactionsContextValue {
 const TransactionsContext = createContext<TransactionsContextValue | null>(null);
 
 const STORAGE_KEY = "finsight_transactions_v1";
+// Archivos seleccionados por empresa. Se guardan aparte para que todas las
+// pestañas abiertas vean la misma selección en tiempo real.
+const SELECTION_KEY = "finsight_selected_batches_v1";
+
+function readSelection(companyKey: string): string[] {
+  try {
+    const raw = localStorage.getItem(SELECTION_KEY);
+    const parsed = raw ? (JSON.parse(raw) as Record<string, string[]>) : {};
+    return Array.isArray(parsed[companyKey]) ? parsed[companyKey] : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeSelection(companyKey: string, ids: string[]) {
+  try {
+    const raw = localStorage.getItem(SELECTION_KEY);
+    const parsed = raw ? (JSON.parse(raw) as Record<string, string[]>) : {};
+    parsed[companyKey] = ids;
+    localStorage.setItem(SELECTION_KEY, JSON.stringify(parsed));
+  } catch {
+    // sin almacenamiento: la selección sigue funcionando solo en esta pestaña
+  }
+}
 
 function periodKeyOf(period: PeriodFilter, d: Date): string {
   if (period === "yearly") return String(d.getFullYear());
@@ -187,17 +211,43 @@ export function TransactionsProvider({ children }: { children: ReactNode }) {
   const allTransactions = byCompany[companyKey] ?? [];
   const uploads = uploadsByCompany[companyKey] ?? [];
 
-  // Al cambiar de empresa, "Viendo: Todos los archivos" vuelve a ser el default.
+  // Al cambiar de empresa se carga la selección guardada de esa empresa
+  // (vacía = todos los archivos).
   useEffect(() => {
-    setSelectedBatchIds([]);
-  }, [companyId]);
+    setSelectedBatchIds(readSelection(companyKey));
+  }, [companyKey]);
+
+  // Sincronización entre pestañas: si en otra ventana se marcan/desmarcan
+  // archivos o se suben datos, esta ventana se actualiza sola.
+  useEffect(() => {
+    function onStorage(e: StorageEvent) {
+      if (e.key === SELECTION_KEY) {
+        setSelectedBatchIds(readSelection(companyKey));
+      } else if (e.key === STORAGE_KEY && e.newValue) {
+        try {
+          const parsed: PersistedShape = JSON.parse(e.newValue);
+          setByCompany(parsed.byCompany ?? {});
+          setUploadsByCompany(parsed.uploadsByCompany ?? {});
+        } catch {
+          // dato corrupto: lo ignoramos
+        }
+      }
+    }
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, [companyKey]);
 
   function toggleBatch(id: string) {
-    setSelectedBatchIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+    const next = selectedBatchIds.includes(id)
+      ? selectedBatchIds.filter((x) => x !== id)
+      : [...selectedBatchIds, id];
+    setSelectedBatchIds(next);
+    writeSelection(companyKey, next);
   }
 
   function selectAllBatches() {
     setSelectedBatchIds([]);
+    writeSelection(companyKey, []);
   }
 
   function addUpload(
@@ -220,6 +270,7 @@ export function TransactionsProvider({ children }: { children: ReactNode }) {
   function clearAll() {
     setByCompany((prev) => ({ ...prev, [companyKey]: [] }));
     setUploadsByCompany((prev) => ({ ...prev, [companyKey]: [] }));
+    selectAllBatches();
   }
 
   // Filtro por "lote" (archivo subido): "all" = ver el historial completo.
