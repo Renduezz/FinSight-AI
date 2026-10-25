@@ -11,7 +11,8 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 export default function RecentUploadsTable() {
-  const { uploads, selectedBatchId, setSelectedBatchId } = useTransactions();
+  const { uploads, selectedBatchIds, toggleBatch, selectAllBatches } = useTransactions();
+  const allSelected = selectedBatchIds.length === 0;
   const { t } = useLanguage();
   const u = t.transactions.uploads;
 
@@ -35,23 +36,31 @@ export default function RecentUploadsTable() {
         </thead>
         <tbody>
           <tr
-            onClick={() => setSelectedBatchId("all")}
-            className={`cursor-pointer border-b border-slate-50 ${selectedBatchId === "all" ? "bg-primary/5" : "hover:bg-slate-50"}`}
+            onClick={() => selectAllBatches()}
+            className={`cursor-pointer border-b border-slate-50 ${allSelected ? "bg-primary/5" : "hover:bg-slate-50"}`}
           >
             <td className="flex items-center gap-2 py-3 font-medium text-primary" colSpan={4}>
-              {selectedBatchId === "all" && <CheckCircle2 className="h-4 w-4" />}
+              {allSelected && <CheckCircle2 className="h-4 w-4" />}
               {u.viewAll}
             </td>
           </tr>
           {uploads.map((upload) => (
             <tr
               key={upload.batchId}
-              onClick={() => upload.status === "Completed" && setSelectedBatchId(upload.batchId)}
+              onClick={() => upload.status === "Completed" && toggleBatch(upload.batchId)}
               className={`border-b border-slate-50 last:border-0 ${
                 upload.status === "Completed" ? "cursor-pointer" : "cursor-not-allowed opacity-60"
-              } ${selectedBatchId === upload.batchId ? "bg-primary/5" : "hover:bg-slate-50"}`}
+              } ${selectedBatchIds.includes(upload.batchId) ? "bg-primary/5" : "hover:bg-slate-50"}`}
             >
               <td className="flex items-center gap-2 py-3 text-slate-700">
+                {upload.status === "Completed" && (
+                  <input
+                    type="checkbox"
+                    readOnly
+                    checked={selectedBatchIds.includes(upload.batchId)}
+                    className="h-4 w-4 accent-primary"
+                  />
+                )}
                 {upload.status === "Error" ? (
                   <AlertTriangle className="h-4 w-4 text-red-500" />
                 ) : (
