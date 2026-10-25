@@ -1,3 +1,5 @@
+import math
+
 from app.core.config import settings
 from app.core.exceptions import PredictionError
 from app.features.predictions.schemas import PredictionRequest, PredictionResponse
@@ -15,6 +17,27 @@ def _score_to_risk_level(score: float) -> str:
         return "Medio"
     else:
         return "Alto"
+
+def _blend_risk(model_score: float, feature_row, trend: str | None) -> float:
+    """
+    El modelo entrenado casi solo distingue dos extremos (~0 o ~1). Para que el
+    riesgo sea gradual y refleje de verdad los datos, lo combinamos (20%) con
+    una curva suave basada en la relacion gastos/ingresos (80%), y ajustamos un
+    poco segun la tendencia real.
+      ratio 0.6 -> ~7%   ratio 1.0 -> 50%   ratio 1.5 -> ~95%
+    """
+    ratio = float(feature_row["expense_to_income_ratio"].iloc[0])
+    if ratio != ratio:  # NaN: no hay ingresos
+        ratio = 5.0
+    ratio = min(max(ratio, 0.0), 5.0)
+    smooth = 1.0 / (1.0 + math.exp(-6.0 * (ratio - 1.0)))
+    score = 0.2 * model_score + 0.8 * smooth
+    if trend == "worsening":
+        score += 0.05
+    elif trend == "improving":
+        score -= 0.03
+    return min(max(score, 0.0), 1.0)
+
 
 def _estimate_cashflow_projection(feature_row) -> float:
     net_cashflow = feature_row["net_cashflow"].iloc[0]
@@ -39,6 +62,7 @@ def generate_prediction(request: PredictionRequest) -> PredictionResponse:
     shap_factors = explain_prediction(model, feature_row)
     cashflow_projection = _estimate_cashflow_projection(feature_row)
     trend_projection = compute_trend_projection(request.transactions)
+    risk_score = _blend_risk(risk_score, feature_row, trend_projection["trend"])
 
     return PredictionResponse(
         company_id=request.company_id,
