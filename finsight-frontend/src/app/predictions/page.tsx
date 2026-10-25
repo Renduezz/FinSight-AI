@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Sparkles } from "lucide-react";
 import DashboardLayout from "@/shared/components/DashboardLayout";
 import RiskGauge from "@/features/predictions/components/RiskGauge";
@@ -12,14 +12,27 @@ import { runAnalysis, MlAnalysisResult } from "@/features/predictions/services/p
 import { useLanguage } from "@/shared/context/LanguageContext";
 
 export default function PredictionsPage() {
-  const { transactions, riskHeuristic } = useTransactions();
+  const { transactions, riskHeuristic, selectedTransactions, selectedBatchIds, uploads } = useTransactions();
   const { activeCompany } = useCompany();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const hasData = transactions.length > 0;
+  const es = language === "es";
+  const analyzedFiles =
+    selectedBatchIds.length === 0
+      ? es ? "todos los archivos" : "all files"
+      : uploads.filter((u) => selectedBatchIds.includes(u.batchId)).map((u) => u.fileName).join(", ");
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [realResult, setRealResult] = useState<MlAnalysisResult | null>(null);
   const [serviceError, setServiceError] = useState("");
+
+  // Si cambias de empresa o de archivos seleccionados, el resultado anterior
+  // ya no corresponde: volvemos a la estimación local hasta ejecutar de nuevo.
+  const selectionKey = `${activeCompany?.id ?? ""}|${selectedBatchIds.join(",")}`;
+  useEffect(() => {
+    setRealResult(null);
+    setServiceError("");
+  }, [selectionKey]);
 
   async function handleRunAnalysis() {
     if (!activeCompany) return;
@@ -27,7 +40,14 @@ export default function PredictionsPage() {
     setServiceError("");
 
     try {
-      const result = await runAnalysis(activeCompany.id);
+      // Solo los archivos seleccionados en Transacciones (vacío = todos).
+      const payload = selectedTransactions.map((tx) => ({
+        type: (tx.tipo === "INGRESO" ? "INCOME" : "EXPENSE") as "INCOME" | "EXPENSE",
+        category: tx.categoria,
+        amount: tx.monto,
+        date: tx.fecha,
+      }));
+      const result = await runAnalysis(activeCompany.id, payload);
       setRealResult(result);
     } catch (err) {
       setRealResult(null);
@@ -77,6 +97,13 @@ export default function PredictionsPage() {
         </div>
       ) : (
         <>
+          <p className="mt-3 text-xs text-slate-500">
+            {es ? "Se analiza: " : "Analyzing: "}
+            <span className="font-medium text-slate-700">{analyzedFiles}</span>
+            {es
+              ? " (puedes marcar uno o varios archivos en Transacciones)"
+              : " (you can tick one or several files in Transactions)"}
+          </p>
           {realResult ? (
             <div className="mt-3 rounded-lg border border-green-200 bg-green-50 px-4 py-2 text-xs text-green-700">
               {t.predictions.liveResult}
