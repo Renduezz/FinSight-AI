@@ -56,8 +56,44 @@ function buildAlerts(result: MlAnalysisResult, t: ReturnType<typeof useLanguage>
   return alerts;
 }
 
+function DataSummary({ result, es }: { result: MlAnalysisResult; es: boolean }) {
+  // Cifras reales de los datos analizados (vienen en el campo "value" de cada factor).
+  const val = (name: string) => result.shapExplanation?.find((f) => f.feature === name)?.value;
+  const money = (n?: number) => (n == null ? "-" : `$${Math.round(n).toLocaleString()}`);
+  const ratio = val("expense_to_income_ratio");
+  const rows: [string, string][] = [
+    [es ? "Ingresos totales" : "Total income", money(val("total_income"))],
+    [es ? "Gastos totales" : "Total expenses", money(val("total_expense"))],
+    [es ? "Flujo neto" : "Net cash flow", money(val("net_cashflow"))],
+    [es ? "Gastos / ingresos" : "Expenses / income", ratio == null ? "-" : `${(ratio * 100).toFixed(0)}%`],
+    [es ? "Transacciones analizadas" : "Transactions analyzed", String(Math.round(val("transaction_count") ?? 0))],
+    [es ? "Riesgo calculado" : "Calculated risk", `${Math.round(result.riskScore * 100)}% (${result.riskLevel})`],
+    [es ? "Proyección a 30 días" : "30-day projection", money(result.projectedCashflow30d ?? undefined)],
+    [es ? "Proyección a 90 días" : "90-day projection", money(result.projectedCashflow90d ?? undefined)],
+  ];
+  return (
+    <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <p className="text-sm font-semibold text-slate-700">
+        {es ? "Resumen de los datos analizados" : "Summary of analyzed data"}
+      </p>
+      <p className="mt-1 text-xs text-slate-400">
+        {es ? "Análisis del " : "Analysis from "}
+        {new Date(result.predictionDate).toLocaleString()}
+      </p>
+      <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3">
+        {rows.map(([label, value]) => (
+          <div key={label}>
+            <dt className="text-xs text-slate-400">{label}</dt>
+            <dd className="text-sm font-semibold text-slate-800">{value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  );
+}
+
 export default function ExplanationsPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { activeCompany } = useCompany();
 
   const [result, setResult] = useState<MlAnalysisResult | null>(null);
@@ -109,7 +145,10 @@ export default function ExplanationsPage() {
         </div>
       ) : (
         <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <ShapFactorsList factors={result?.shapExplanation ?? []} />
+          <div className="space-y-6">
+            {result && <DataSummary result={result} es={language === "es"} />}
+            <ShapFactorsList factors={result?.shapExplanation ?? []} />
+          </div>
 
           <div className="space-y-3">
             <p className="text-sm font-semibold text-slate-700">{t.insights.activeAlerts}</p>
