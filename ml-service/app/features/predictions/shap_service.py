@@ -3,7 +3,7 @@ import pandas as pd
 from app.features.predictions.schemas import ShapFactor
 
 
-TOP_N_FACTORS = 5
+TOP_N_FACTORS = 9
 
 def explain_prediction(model, feature_row: pd.DataFrame) -> list[ShapFactor]:
   #para usar la libreria shap
