@@ -71,6 +71,8 @@ interface TransactionsContextValue {
   selectAllBatches: () => void;
   // Todas las transacciones de los archivos seleccionados (sin filtrar por periodo).
   selectedTransactions: TransactionRecord[];
+  // Transacciones del periodo inmediatamente anterior (para comparar).
+  previousTransactions: TransactionRecord[];
   addUpload: (companyId: number, records: Omit<TransactionRecord, "id" | "batchId">[], upload: Omit<UploadRecord, "batchId">) => void;
   removeTransaction: (id: string) => void;
   clearAll: () => void;
@@ -102,6 +104,14 @@ function writeSelection(companyKey: string, ids: string[]) {
   } catch {
     // sin almacenamiento: la selección sigue funcionando solo en esta pestaña
   }
+}
+
+// "2026-10-01" con new Date() se interpreta en UTC y, en zonas horarias de
+// América, cae el día anterior (el día 1 acabaría en el mes anterior). Aquí se
+// interpreta siempre como fecha local.
+function parseLocalDate(value: string): Date {
+  const [y, m, d] = value.slice(0, 10).split("-").map(Number);
+  return new Date(y, (m || 1) - 1, d || 1);
 }
 
 function periodKeyOf(period: PeriodFilter, d: Date): string {
@@ -147,7 +157,7 @@ function getPeriodRange(refDate: Date, period: PeriodFilter, offset: number): [D
 }
 
 function inRange(dateStr: string, range: [Date, Date]) {
-  const d = new Date(dateStr);
+  const d = parseLocalDate(dateStr);
   return d >= range[0] && d < range[1];
 }
 
@@ -283,7 +293,7 @@ export function TransactionsProvider({ children }: { children: ReactNode }) {
   // datos realmente presentes, para que el usuario elija cuál ver.
   const availablePeriodKeys = useMemo(() => {
     const set = new Set<string>();
-    for (const t of batchFiltered) set.add(periodKeyOf(period, new Date(t.fecha)));
+    for (const t of batchFiltered) set.add(periodKeyOf(period, parseLocalDate(t.fecha)));
     return Array.from(set).sort().reverse();
   }, [batchFiltered, period]);
 
@@ -329,7 +339,7 @@ export function TransactionsProvider({ children }: { children: ReactNode }) {
   const trendData = useMemo<TrendPoint[]>(() => {
     const map = new Map<string, { label: string; income: number; expenses: number; sortKey: string }>();
     for (const t of transactions) {
-      const d = new Date(t.fecha);
+      const d = parseLocalDate(t.fecha);
       const sortKey = period === "monthly" ? t.fecha : `${d.getFullYear()}-${String(d.getMonth()).padStart(2, "0")}`;
       const label = period === "monthly" ? String(d.getDate()) : monthNames[d.getMonth()];
       const entry = map.get(sortKey) ?? { label, income: 0, expenses: 0, sortKey };
@@ -381,6 +391,7 @@ export function TransactionsProvider({ children }: { children: ReactNode }) {
         toggleBatch,
         selectAllBatches,
         selectedTransactions: batchFiltered,
+        previousTransactions,
         addUpload,
         removeTransaction,
         clearAll,
