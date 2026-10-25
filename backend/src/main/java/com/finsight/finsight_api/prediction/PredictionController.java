@@ -13,8 +13,10 @@ public class PredictionController {
     private final PredictionService predictionService;
 
     @PostMapping("/generate/{companyId}")
-    public ResponseEntity<PredictionDto> generate(@PathVariable Long companyId) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(predictionService.generate(companyId));
+    public ResponseEntity<PredictionDto> generate(
+            @PathVariable Long companyId,
+            @RequestBody(required = false) PredictionGenerateRequest body) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(predictionService.generate(companyId, body));
     }
 
     @GetMapping("/latest/{companyId}")
