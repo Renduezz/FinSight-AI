@@ -65,8 +65,12 @@ interface TransactionsContextValue {
   selectedPeriodKey: string | null;
   setSelectedPeriodKey: (key: string) => void;
   formatPeriodKey: (key: string) => string;
-  selectedBatchId: string | "all";
-  setSelectedBatchId: (id: string | "all") => void;
+  // Archivos seleccionados. Lista vacía = todos los archivos.
+  selectedBatchIds: string[];
+  toggleBatch: (id: string) => void;
+  selectAllBatches: () => void;
+  // Todas las transacciones de los archivos seleccionados (sin filtrar por periodo).
+  selectedTransactions: TransactionRecord[];
   addUpload: (companyId: number, records: Omit<TransactionRecord, "id" | "batchId">[], upload: Omit<UploadRecord, "batchId">) => void;
   removeTransaction: (id: string) => void;
   clearAll: () => void;
@@ -148,7 +152,7 @@ export function TransactionsProvider({ children }: { children: ReactNode }) {
   const [uploadsByCompany, setUploadsByCompany] = useState<Record<string, UploadRecord[]>>({});
   const [period, setPeriod] = useState<PeriodFilter>("yearly");
   const [selectedPeriodKey, setSelectedPeriodKey] = useState<string | null>(null);
-  const [selectedBatchId, setSelectedBatchId] = useState<string | "all">("all");
+  const [selectedBatchIds, setSelectedBatchIds] = useState<string[]>([]);
   const [hasLoadedFromStorage, setHasLoadedFromStorage] = useState(false);
 
   // Cargar desde localStorage una sola vez, al montar la app.
@@ -185,8 +189,16 @@ export function TransactionsProvider({ children }: { children: ReactNode }) {
 
   // Al cambiar de empresa, "Viendo: Todos los archivos" vuelve a ser el default.
   useEffect(() => {
-    setSelectedBatchId("all");
+    setSelectedBatchIds([]);
   }, [companyId]);
+
+  function toggleBatch(id: string) {
+    setSelectedBatchIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  }
+
+  function selectAllBatches() {
+    setSelectedBatchIds([]);
+  }
 
   function addUpload(
     targetCompanyId: number,
@@ -212,9 +224,9 @@ export function TransactionsProvider({ children }: { children: ReactNode }) {
 
   // Filtro por "lote" (archivo subido): "all" = ver el historial completo.
   const batchFiltered = useMemo(() => {
-    if (selectedBatchId === "all") return allTransactions;
-    return allTransactions.filter((t) => t.batchId === selectedBatchId);
-  }, [allTransactions, selectedBatchId]);
+    if (selectedBatchIds.length === 0) return allTransactions;
+    return allTransactions.filter((t) => selectedBatchIds.includes(t.batchId));
+  }, [allTransactions, selectedBatchIds]);
 
   // Claves de periodo disponibles (ej. ["2026-06","2026-05",...]) según los
   // datos realmente presentes, para que el usuario elija cuál ver.
@@ -314,8 +326,10 @@ export function TransactionsProvider({ children }: { children: ReactNode }) {
         selectedPeriodKey,
         setSelectedPeriodKey,
         formatPeriodKey: (key) => formatPeriodKeyLabel(period, key, monthNames),
-        selectedBatchId,
-        setSelectedBatchId,
+        selectedBatchIds,
+        toggleBatch,
+        selectAllBatches,
+        selectedTransactions: batchFiltered,
         addUpload,
         removeTransaction,
         clearAll,
