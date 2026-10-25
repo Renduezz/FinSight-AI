@@ -27,9 +27,19 @@ export interface MlAnalysisResult {
 
 // Generates a new prediction: the backend reads the company's transactions,
 // calls the Python ML service and stores the result.
-export function runAnalysis(companyId: number) {
+// Si se pasan transacciones, solo se analizan esas (los archivos seleccionados);
+// si no, el backend usa todo lo guardado de la empresa.
+export interface AnalysisTransaction {
+  type: "INCOME" | "EXPENSE";
+  category: string;
+  amount: number;
+  date: string;
+}
+
+export function runAnalysis(companyId: number, transactions?: AnalysisTransaction[]) {
   return apiFetch<MlAnalysisResult>(`/predictions/generate/${companyId}`, {
     method: "POST",
+    body: JSON.stringify({ transactions: transactions ?? [] }),
   });
 }
 
